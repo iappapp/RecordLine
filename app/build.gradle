@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "24"
     defaultConfig {
         applicationId "com.example.recordpath3d"
         minSdkVersion 19
@@ -23,6 +23,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:support-v4:25.0.1'
     compile files('libs/AMap3DMap_4.1.2.jar')
 }
