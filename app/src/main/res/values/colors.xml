@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="poi_activity_back">#eeeff3</color>
+    <color name="poi_activity_title_bar">#2fa769</color>
+    <color name="poi_activity_content">#ffffff</color>
+</resources>

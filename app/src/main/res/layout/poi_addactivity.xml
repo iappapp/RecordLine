@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/poi_activity_back">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/poi_title_bar"
+        android:background="@color/poi_activity_title_bar">
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="8">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:background="@drawable/goback_small"
+                android:id="@+id/poi_add_goback" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="2">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/addpoi"
+                android:textSize="@dimen/poi_title"
+                android:layout_weight="6"
+                android:gravity="center_vertical" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="保存"
+                android:textSize="@dimen/poi_title"
+                android:layout_weight="2"
+                android:id="@+id/poi_add_save" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:background="@color/poi_activity_back">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/poi_singlecontent"
+            android:orientation="horizontal"
+            android:background="@color/poi_activity_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/poi_single_title"
+                android:text="名称"
+                android:textAlignment="center"
+                android:layout_weight="8"
+                android:gravity="center_vertical|center_horizontal" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|left"
+                android:id="@+id/poi_add_name" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/poi_singlecontent"
+            android:orientation="horizontal"
+
+            android:background="@color/poi_activity_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/poi_single_title"
+                android:text="描述"
+                android:layout_weight="8"
+                android:gravity="center_vertical|center_horizontal" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="请输入描述"
+                android:layout_weight="2"
+                android:textSize="@dimen/poi_title"
+                android:gravity="center_vertical|left"
+                android:id="@+id/poi_add_description" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:background="@color/poi_activity_back"
+        android:layout_marginTop="30dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/poi_singlecontent"
+            android:orientation="horizontal"
+            android:background="@color/poi_activity_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/poi_single_title"
+                android:text="地址"
+                android:textAlignment="center"
+                android:layout_weight="8"
+                android:gravity="center_vertical|center_horizontal" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|left"
+                android:id="@+id/poi_add_address" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/poi_singlecontent"
+            android:orientation="horizontal"
+
+            android:background="@color/poi_activity_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/poi_single_title"
+                android:text="位置"
+                android:layout_weight="8"
+                android:gravity="center_vertical|center_horizontal" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|left"
+                android:id="@+id/poi_add_position" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:background="@color/poi_activity_back"
+        android:layout_marginTop="30dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/poi_singlecontent"
+            android:orientation="horizontal"
+            android:background="@color/poi_activity_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/poi_single_title"
+                android:text="加载到地图"
+                android:textAlignment="center"
+                android:layout_weight="3"
+                android:gravity="center_vertical|center_horizontal|left"
+                android:layout_marginLeft="20dp" />
+
+            <com.zcw.togglebutton.ToggleButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+
+                android:id="@+id/poi_add_load_poi" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
