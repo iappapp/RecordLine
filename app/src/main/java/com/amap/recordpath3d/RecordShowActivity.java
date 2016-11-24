@@ -131,8 +131,7 @@ public class RecordShowActivity extends Activity implements OnMapLoadedListener 
 					.icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
 			aMap.addMarker(new MarkerOptions().position(mrecord.getEndpoint())
 					.icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
-			
-			
+
 //			aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mrecord.getStartpoint(), 15));
 			try {
 				aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getBounds(), 50));

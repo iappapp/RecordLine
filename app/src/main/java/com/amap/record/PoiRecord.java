@@ -14,11 +14,6 @@ import java.util.List;
  */
 public class PoiRecord implements Parcelable {
 
-    private int id;
-    private String description;
-    private List<LatLng> point;
-    private Date time;
-
     public PoiRecord() {
     }
 
@@ -30,12 +25,12 @@ public class PoiRecord implements Parcelable {
         this.id = id;
     }
 
-    public List<LatLng> getPoint() {
-        return point;
+    public String getName() {
+        return name;
     }
 
-    public void setPoint(List<LatLng> point) {
-        this.point = point;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -44,6 +39,22 @@ public class PoiRecord implements Parcelable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Date getTime() {
@@ -59,18 +70,28 @@ public class PoiRecord implements Parcelable {
         return 0;
     }
 
+    private int id;
+    private String name;
+    private String description;
+    private String point;
+    private String address;
+    private Date time;
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+
+        dest.writeString(name);
         dest.writeString(description);
-        dest.writeTypedList(point);
+        dest.writeString(point);
+        dest.writeString(address);
         dest.writeString(time.toString());
     }
 
     protected PoiRecord(Parcel parcel){
-        this.id = parcel.readInt();
+
+        this.name = parcel.readString();
         this.description = parcel.readString();
-        this.point = parcel.createTypedArrayList(LatLng.CREATOR);
+        this.point = parcel.readString();
+        this.address = parcel.readString();
         this.time = new Date(parcel.readString());
     }
 
@@ -85,7 +106,5 @@ public class PoiRecord implements Parcelable {
             return new PoiRecord[size];
         }
     };
-
-
 
 }

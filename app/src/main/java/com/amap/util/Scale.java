@@ -26,16 +26,12 @@ public class Scale {
 
     public static String toAdjustUnits(float scale){
         for(int i = 0; i < ruler.length; i++){
-
             float imglength = ruler[i] / scale;
             int width = (int) imglength;
             if(imglength >= 40 && imglength <= 192){
                 return rulers[i] + "," + width;
             }
         }
-
         return null;
     }
-
-
 }

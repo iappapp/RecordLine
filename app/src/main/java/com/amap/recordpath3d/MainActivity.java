@@ -11,16 +11,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.location.Geocoder;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,14 +37,12 @@ import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.geocoder.GeocodeQuery;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeAddress;
@@ -60,14 +53,12 @@ import com.amap.record.PathRecord;
 import com.amap.util.Coordinate;
 import com.example.recordpath3d.R;
 
-
 /**
  * AMapV2地图中介绍如何显示一个基本地图
  */
 public class MainActivity extends Activity implements LocationSource,
         AMapLocationListener, OnClickListener, AMap.OnMapClickListener,
-        GpsStatus.Listener, AMap.OnMapTouchListener, AMap.OnMapLongClickListener,
-        GeocodeSearch.OnGeocodeSearchListener {
+        GpsStatus.Listener, AMap.OnMapTouchListener, AMap.OnMapLongClickListener {
 
     private MapView mapView;
     private AMap aMap;
@@ -92,8 +83,6 @@ public class MainActivity extends Activity implements LocationSource,
     private ToggleButton linedistance;
     private TextView gpsStatus;
     private float scale;
-    private GeocodeSearch geocodeSearch;
-    private String address = "";
 
 
     @Override
@@ -143,8 +132,7 @@ public class MainActivity extends Activity implements LocationSource,
         aMap.setOnMapLongClickListener(this);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         manager.addGpsStatusListener(this);
-        geocodeSearch = new GeocodeSearch(this);
-        geocodeSearch.setOnGeocodeSearchListener(this);
+
 
         btn = (ToggleButton) findViewById(R.id.locationbtn);
         btn.setOnClickListener(this);
@@ -520,7 +508,7 @@ public class MainActivity extends Activity implements LocationSource,
                     break;
             }
         }
-        gpsStatus.setText("" + count);
+        gpsStatus.setText(String.valueOf(count));
     }
 
     @Override
@@ -534,50 +522,21 @@ public class MainActivity extends Activity implements LocationSource,
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        updateLocationInfo(latLng);
-        LatLonPoint point = new LatLonPoint(latLng.latitude,latLng.longitude);
-        RegeocodeQuery query = new RegeocodeQuery(point,200f,GeocodeSearch.AMAP);
-        geocodeSearch.getFromLocationAsyn(query);
-        RegeocodeAddress regeocodeAddress;
-        try{
-            regeocodeAddress = geocodeSearch.getFromLocation(query);
-            if(regeocodeAddress != null){
-                address = regeocodeAddress.getFormatAddress();
-            }
-        }catch (AMapException ex){
-            ex.printStackTrace();
-        }
 
+        LatLonPoint point = new LatLonPoint(latLng.latitude,latLng.longitude);
 
         Marker marker = aMap.addMarker(new MarkerOptions().
                 position(latLng).
                 title("").
-                snippet(address));
+                snippet(""));
 
         if (linedistance.isChecked()) {
             latLngs.add(latLng);
             redrawline(latLngs);
         }
-    }
 
-    @Override
-    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-
-        if(i == 1000){
-            if(regeocodeResult != null && regeocodeResult.getRegeocodeAddress() != null
-                    && regeocodeResult.getRegeocodeAddress().getFormatAddress() != null){
-                address = regeocodeResult.getRegeocodeAddress().getFormatAddress() + "附近";
-                Toast.makeText(getApplicationContext(),address,Toast.LENGTH_SHORT).show();
-            }else{
-
-            }
-        }else{
-
-        }
-    }
-
-    @Override
-    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-
+        Intent intent = new Intent(this,PoiAddActivity.class);
+        intent.putExtra("point",latLng);
+        startActivity(intent);
     }
 }
