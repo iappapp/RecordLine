@@ -7,7 +7,10 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="@dimen/poi_title_bar"
-        android:layout_gravity="center_horizontal"></LinearLayout>
+        android:layout_gravity="center_horizontal">
+
+
+    </LinearLayout>
 
     <ListView
 
