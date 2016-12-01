@@ -1,4 +1,4 @@
-package com.amap.recordpath3d;
+package com.amap.adapter;
 
 import java.util.List;
 

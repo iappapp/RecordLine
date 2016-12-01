@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.amap.adapter.RecordAdapter;
 import com.amap.api.maps.model.LatLng;
 import com.amap.database.DbAdapter;
 import com.amap.record.PathRecord;
@@ -30,7 +30,7 @@ public class RecordActivity extends Activity {
 	private List<PathRecord> listdata = new ArrayList<PathRecord>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recordlist);
 		recordlist = (ListView)findViewById(R.id.recordlist);
@@ -50,27 +50,27 @@ public class RecordActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-//		recordlist.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				
-//				Log.i("MY", position+"");
-//				boolean b = DbHepler.delete(listdata.get(position).getId());
-//				if (b) {
-//					listdata.remove(position);
-//					mAdapter.notifyDataSetChanged();
-//					recordlist.invalidate();
-//				}
-//				return false;
-//			}
-//		});
+		recordlist.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				Log.i("MY", position+"");
+				boolean b = DbHepler.delete(listdata.get(position).getId());
+				if (b) {
+					listdata.remove(position);
+					mAdapter.notifyDataSetChanged();
+					recordlist.invalidate();
+				}
+				return false;
+			}
+		});
 	}
 
 	private void addRecorddata() {
 	
-		mCursor=DbHepler.getallrecord();
+		mCursor = DbHepler.getallrecord();
 		while (mCursor.moveToNext()) {
 			PathRecord record = new PathRecord();
 //			record.setId(mCursor.getInt(mCursor.getColumnIndex(DbAdapter.KEY_ROWID)));
