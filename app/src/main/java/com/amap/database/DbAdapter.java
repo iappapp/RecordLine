@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.Keep;
-import android.util.Log;
 
 public class DbAdapter {
     private final static String DATABASE_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/recordPath";
@@ -134,6 +132,10 @@ public class DbAdapter {
 
     public Cursor getAllPoiRecord() {
         return db.query(POI_TABLE, new String[]{KEY_ROWID, KEY__NAME, KEY_DESCRIPTION, KEY_POINT, KEY_ADDRESS, KEY_DATE}, null, null, null, null, null);
+    }
+
+    public boolean deletePoiRecord(int id){
+        return db.delete(POI_TABLE,"id=" + id,null) > 0;
     }
 
     private static final String MAN_TABLE = "manualrecord";

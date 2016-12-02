@@ -350,7 +350,7 @@ public class MainActivity extends Activity implements LocationSource,
     }
 
     public void record(View view) {
-        Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+        Intent intent = new Intent(MainActivity.this,PoiListActivity.class);
         startActivity(intent);
     }
 

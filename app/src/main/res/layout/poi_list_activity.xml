@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/poi_activity_back"
+    >
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="@dimen/poi_title_bar"
         android:layout_gravity="center_horizontal">
-
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="兴趣点"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="45sp"
+            />
     </LinearLayout>
 
     <ListView
-
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
+        android:layout_height="match_parent"
+        android:id="@+id/poi_listview"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

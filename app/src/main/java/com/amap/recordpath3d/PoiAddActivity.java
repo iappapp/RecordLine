@@ -11,9 +11,7 @@ import android.widget.Toast;
 import com.amap.api.maps.model.LatLng;
 import com.amap.database.DbAdapter;
 import com.zcw.togglebutton.ToggleButton;
-
 import com.example.recordpath3d.R;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +41,7 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         setContentView(R.layout.poi_addactivity);
 
         point = getIntent().getParcelableExtra("point");
+
         initView();
         initEvent();
         setupPoi();
@@ -56,6 +55,7 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         poiAddress = (EditText) findViewById(R.id.poi_add_address);
         poiPosition = (EditText) findViewById(R.id.poi_add_position);
         poiToggleBtn = (ToggleButton) findViewById(R.id.poi_add_load_poi);
+
     }
 
     /**
@@ -64,7 +64,7 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
     public void initEvent(){
         poiGoback.setOnClickListener(this);
         poiSaveBtn.setOnClickListener(this);
-        poiToggleBtn.setOnClickListener(this);
+        poiToggleBtn.setOnToggleChanged(this);
     }
 
     @Override
@@ -77,6 +77,8 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
                 savePoi();
                 finish();
                 break;
+            case R.id.poi_add_load_poi:
+                break;
             default:
                 break;
         }
@@ -84,11 +86,7 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
 
     @Override
     public void onToggle(boolean on) {
-        if(on){
-
-        }else{
-
-        }
+        poiToggleBtn.toggle();
     }
 
     public void setupPoi(){
@@ -112,8 +110,5 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         }catch (Exception ex){
             ex.printStackTrace();
         }
-
-
     }
-
 }

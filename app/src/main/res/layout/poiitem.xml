@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/poi_activity_back">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="@dimen/poi_list_sing_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/poi_activity_title_bar">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/poi_image"
             android:layout_weight="8"
-
-            />
+            android:src="@drawable/poi" />
 
         <LinearLayout
 
@@ -27,14 +29,16 @@
             <TextView
                 android:id="@+id/poi_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/poi_list_name"
                 android:layout_gravity="left"
+                android:textSize="25sp"
                 />
             <TextView
                 android:id="@+id/poi_position"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/poi_list_point"
                 android:layout_gravity="left"
+                android:textSize="15sp"
                 />
 
         </LinearLayout>

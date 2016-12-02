@@ -8,4 +8,7 @@
     <dimen name="poi_title">30sp</dimen>
     <dimen name="poi_singlecontent">60dp</dimen>
     <dimen name="poi_single_title">30sp</dimen>
+    <dimen name="poi_list_sing_content">50dp</dimen>
+    <dimen name="poi_list_name">35dp</dimen>
+    <dimen name="poi_list_point">15dp</dimen>
 </resources>
