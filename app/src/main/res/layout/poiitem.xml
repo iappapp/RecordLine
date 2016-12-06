@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/poi_list_sing_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/poi_activity_title_bar">
+        android:background="@color/poi_list_item">
 
         <ImageView
             android:layout_width="match_parent"
@@ -38,9 +38,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/poi_list_point"
                 android:layout_gravity="left"
-                android:textSize="15sp"
+                android:textSize="10sp"
                 />
 
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

@@ -4,9 +4,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!-- poi_activity -->
-    <dimen name="poi_title_bar">60dp</dimen>
+    <dimen name="poi_title_bar">50dp</dimen>
     <dimen name="poi_title">30sp</dimen>
-    <dimen name="poi_singlecontent">60dp</dimen>
+    <dimen name="poi_singlecontent">50dp</dimen>
     <dimen name="poi_single_title">30sp</dimen>
     <dimen name="poi_list_sing_content">50dp</dimen>
     <dimen name="poi_list_name">35dp</dimen>
