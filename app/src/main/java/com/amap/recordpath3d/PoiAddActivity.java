@@ -86,7 +86,11 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
 
     @Override
     public void onToggle(boolean on) {
-        poiToggleBtn.toggle();
+        if(on){
+            Toast.makeText(PoiAddActivity.this,"开关打开",Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(PoiAddActivity.this,"开关关闭",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setupPoi(){
