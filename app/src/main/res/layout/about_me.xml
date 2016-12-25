@@ -30,7 +30,9 @@
             android:src="@drawable/right_arrow"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="35dp" />
+            android:paddingTop="35dp"
+            android:paddingBottom="35dp"
+            android:paddingLeft="60dp" />
 
     </LinearLayout>
     <LinearLayout
