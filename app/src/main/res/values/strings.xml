@@ -2,8 +2,6 @@
 <resources>
 
     <string name="app_name">RecordLine</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="pathplay">轨迹回放</string>
     <string name="addpoi">增加兴趣点</string>
 
@@ -14,4 +12,6 @@
     <string name="path">轨迹</string>
     <string name="poi_point">兴趣点</string>
     <string name="auto_sync">自动同步</string>
+    <string name="auto_update">自动更新</string>
+    <string name="message">消息</string>
 </resources>

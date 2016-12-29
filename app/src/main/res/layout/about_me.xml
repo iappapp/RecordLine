@@ -1,150 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/darker_gray"
-    >
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/poi_activity_title_bar">
 
         <ImageView
+            android:id="@+id/user_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/user_default"
             android:layout_gravity="center_vertical"
-            android:padding="10dp" />
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:src="@drawable/user_default" />
+
         <TextView
+            android:id="@+id/user_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/not_login"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical" />
+            android:text="@string/not_login"
+            android:textSize="20sp" />
+
         <ImageView
+            android:id="@+id/user_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/right_arrow"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:paddingTop="35dp"
+            android:layout_weight="1"
             android:paddingBottom="35dp"
-            android:paddingLeft="60dp" />
+            android:paddingLeft="40dp"
+            android:paddingTop="35dp"
+            android:src="@drawable/right_arrow" />
 
     </LinearLayout>
+
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:orientation="horizontal"
+        android:orientation="horizontal">
 
-
-        >
         <LinearLayout
+            android:id="@+id/layout_path"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_weight="1"
-            android:background="@android:color/background_light">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:src="@drawable/user_route"
-            android:padding="15dp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="@string/path"
-                android:gravity="center_horizontal" />
+            android:background="@android:color/background_light"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:background="@android:color/background_light">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:src="@drawable/user_point"
-                android:padding="20dp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="@string/path"
-                android:gravity="center_horizontal" />
+                android:padding="15dp"
+                android:src="@drawable/user_route" />
 
             <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/path" />
+
+            <TextView
+                android:id="@+id/user_path_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_point"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/background_light"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:padding="20dp"
+                android:src="@drawable/user_point" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/path" />
+
+            <TextView
+                android:id="@+id/user_poi_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="NONE"
+                android:textSize="15sp" />
+
 
         </LinearLayout>
+
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:background="@android:color/background_light">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:src="@drawable/user_message"
-            android:padding="15dp"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="@string/path"
-            android:gravity="center_horizontal" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-
-    </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/background_light"
-        android:orientation="horizontal">
-
-        <ImageView
+            android:id="@+id/layout_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:src="@drawable/user_path"
-            android:padding="5dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/offline_map"
-            android:textSize="30sp"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical" />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:src="@drawable/right_arrow"
-            android:layout_margin="15dp" />
+            android:background="@android:color/background_light"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:padding="15dp"
+                android:src="@drawable/user_message" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/message"/>
+
+            <TextView
+                android:id="@+id/user_message_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -156,25 +147,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:src="@drawable/sync_off"
             android:padding="5dp"
-            />
+            android:src="@drawable/user_path" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/auto_sync"
-            android:textSize="30sp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical" />
+            android:text="@string/offline_map"
+            android:textSize="30sp" />
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="15dp"
             android:layout_weight="2"
-            android:src="@drawable/right_arrow"
-            android:layout_margin="15dp" />
+            android:src="@drawable/right_arrow" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -185,22 +177,54 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            android:src="@drawable/app" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/offline_map"
-            android:textSize="30sp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical" />
+            android:text="@string/auto_update"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:layout_weight="2"
+            android:src="@drawable/right_arrow" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/background_light"
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:src="@drawable/right_arrow"
-            android:layout_margin="15dp" />
+            android:padding="5dp"
+            android:src="@drawable/sync" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/auto_sync"
+            android:textSize="30sp" />
+
+        <com.zcw.togglebutton.ToggleButton
+            android:id="@+id/toggle_sync"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="2"
+             />
     </LinearLayout>
-
 </LinearLayout>

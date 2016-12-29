@@ -251,7 +251,6 @@ public class MainActivity extends Activity implements LocationSource,
     public void onLocationChanged(AMapLocation amapLocation) {
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
-
 				/*mListener.onLocationChanged(amapLocation);// 显示系统小蓝点*/
                 LatLng mylocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 //更新位置改变的后的坐标信息栏
@@ -267,7 +266,6 @@ public class MainActivity extends Activity implements LocationSource,
                     isFirstLocation = false;
                     updateScaleInfo();
                 }
-
 
                 if (btn.isChecked()) {
                     record.addpoint(mylocation);
@@ -535,7 +533,7 @@ public class MainActivity extends Activity implements LocationSource,
             redrawline(latLngs);
         }
 
-        Intent intent = new Intent(this,PoiAddActivity.class);
+        Intent intent = new Intent(this,UserActivity.class);
         intent.putExtra("point",latLng);
         startActivity(intent);
     }
