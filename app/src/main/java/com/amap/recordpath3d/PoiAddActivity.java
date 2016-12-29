@@ -18,6 +18,7 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.database.DbAdapter;
+import com.amap.util.ToastUtils;
 import com.zcw.togglebutton.ToggleButton;
 import com.example.recordpath3d.R;
 import java.text.SimpleDateFormat;
@@ -78,10 +79,10 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
                 message.what = 1;
                 handler.sendMessage(message);
             }else{
-                Toast.makeText(PoiAddActivity.this,"未匹配到结果",Toast.LENGTH_SHORT).show();
+                ToastUtils.showText(getApplicationContext(),"NO RESULT");
             }
         }else{
-            Toast.makeText(PoiAddActivity.this,"" + i,Toast.LENGTH_SHORT).show();
+            ToastUtils.showText(getApplicationContext(),"error code " + i);
         }
     }
 
@@ -92,15 +93,15 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
 
     public void queryLatlng(){
         search = new GeocodeSearch(PoiAddActivity.this);
+        search.setOnGeocodeSearchListener(this);
         latLonPoint = new LatLonPoint(point.latitude,point.longitude);
-        query = new RegeocodeQuery(latLonPoint,20f,"autonavi");
-        try {
-            search.getFromLocation(query);
-        }catch (AMapException ex){
-            ex.printStackTrace();
-        }
+        query = new RegeocodeQuery(latLonPoint,20f,GeocodeSearch.AMAP);
+        search.getFromLocationAsyn(query);
     }
 
+    /**
+     * 初始化Handler
+     */
     public void initHandler(){
         handler = new Handler(){
             @Override

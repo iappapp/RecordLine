@@ -533,7 +533,7 @@ public class MainActivity extends Activity implements LocationSource,
             redrawline(latLngs);
         }
 
-        Intent intent = new Intent(this,UserActivity.class);
+        Intent intent = new Intent(this,PoiAddActivity.class);
         intent.putExtra("point",latLng);
         startActivity(intent);
     }

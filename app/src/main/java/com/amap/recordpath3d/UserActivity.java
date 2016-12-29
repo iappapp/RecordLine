@@ -1,6 +1,7 @@
 package com.amap.recordpath3d;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -62,10 +63,12 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.layout_path:
-                //TODO
+                Intent intentPath = new Intent(getApplicationContext(),RecordActivity.class);
+                startActivity(intentPath);
                 break;
             case R.id.layout_point:
-                //TODO
+                Intent intent = new Intent(getApplicationContext(),PoiListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.layout_message:
                 //TODO
