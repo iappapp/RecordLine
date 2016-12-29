@@ -80,7 +80,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="@string/path"
+                android:text="@string/poi_point"
                 android:gravity="center_horizontal" />
 
             <TextView
@@ -104,7 +104,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:text="@string/path"
+            android:text="@string/message"
             android:gravity="center_horizontal" />
 
         <TextView

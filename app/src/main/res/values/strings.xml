@@ -14,4 +14,5 @@
     <string name="path">轨迹</string>
     <string name="poi_point">兴趣点</string>
     <string name="auto_sync">自动同步</string>
+    <string name="message">消息</string>
 </resources>
