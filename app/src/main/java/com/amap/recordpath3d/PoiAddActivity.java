@@ -2,6 +2,8 @@ package com.amap.recordpath3d;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,11 +11,18 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.database.DbAdapter;
 import com.zcw.togglebutton.ToggleButton;
 import com.example.recordpath3d.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 /**
  * 从主页面传来坐标
@@ -23,7 +32,7 @@ import java.util.Date;
  * 位置为坐标的字符串
  * 是否加载到地图将兴趣点显示在主页面
  */
-public class PoiAddActivity extends Activity implements View.OnClickListener,ToggleButton.OnToggleChanged{
+public class PoiAddActivity extends Activity implements View.OnClickListener,ToggleButton.OnToggleChanged,GeocodeSearch.OnGeocodeSearchListener{
 
     private ImageButton poiGoback;
     private Button poiSaveBtn;
@@ -34,6 +43,15 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
     private ToggleButton poiToggleBtn;
     private LatLng point;
     private DbAdapter dbAdapter;
+    private Handler handler;
+
+    private GeocodeSearch search;
+    private LatLonPoint latLonPoint;
+    private float radius;
+    private String latLonType;
+    private RegeocodeQuery query;
+    public String result = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +59,61 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         setContentView(R.layout.poi_addactivity);
 
         point = getIntent().getParcelableExtra("point");
-
         initView();
         initEvent();
         setupPoi();
+        initHandler();
+        queryLatlng();
+
+    }
+
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+        if(i == 1000){
+            if(regeocodeResult != null &&
+                    regeocodeResult.getRegeocodeAddress() != null &&
+                    regeocodeResult.getRegeocodeAddress().getFormatAddress() != null){
+                result = regeocodeResult.getRegeocodeAddress().getFormatAddress();
+                Message message = new Message();
+                message.what = 1;
+                handler.sendMessage(message);
+            }else{
+                Toast.makeText(PoiAddActivity.this,"未匹配到结果",Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(PoiAddActivity.this,"" + i,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+    }
+
+    public void queryLatlng(){
+        search = new GeocodeSearch(PoiAddActivity.this);
+        latLonPoint = new LatLonPoint(point.latitude,point.longitude);
+        query = new RegeocodeQuery(latLonPoint,20f,"autonavi");
+        try {
+            search.getFromLocation(query);
+        }catch (AMapException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public void initHandler(){
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case 1:
+                        poiAddress.setText(result);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
     public void initView(){
