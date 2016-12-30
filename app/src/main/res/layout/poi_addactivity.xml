@@ -20,8 +20,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="2"
-                android:background="@drawable/goback_small"
-                android:id="@+id/poi_add_goback" />
+                android:background="@drawable/left_arrow"
+                android:id="@+id/poi_add_goback"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -200,7 +204,11 @@
                 toggle:tbOffColor="#ddd"
                 toggle:tbBorderWidth="2dp"
                 toggle:tbSpotColor="#FF0DD2"
-                android:id="@+id/poi_add_load_poi" />
+                android:id="@+id/poi_add_load_poi"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
 
         </LinearLayout>
 
