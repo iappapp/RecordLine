@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,7 +21,7 @@
                 android:layout_weight="2"
                 android:background="@drawable/left_arrow"
                 android:id="@+id/poi_add_goback"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp" />
@@ -91,7 +90,7 @@
             android:orientation="horizontal"
 
             android:background="@color/poi_activity_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -120,7 +119,7 @@
         android:orientation="vertical"
 
         android:background="@color/poi_activity_back"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/poi_singlecontent"
@@ -180,7 +179,7 @@
         android:orientation="vertical"
 
         android:background="@color/poi_activity_back"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/poi_singlecontent"
@@ -200,10 +199,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="7"
-                toggle:tbOnColor="#5AE8A3"
-                toggle:tbOffColor="#ddd"
-                toggle:tbBorderWidth="2dp"
-                toggle:tbSpotColor="#FF0DD2"
                 android:id="@+id/poi_add_load_poi"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
@@ -213,4 +208,11 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <com.amap.api.maps.MapView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/poi_add_mapview"
+        android:layout_marginTop="4dp" />
+
 </LinearLayout>

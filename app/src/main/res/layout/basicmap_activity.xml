@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:src="@drawable/satelitte1"
-                android:id="@+id/map_type"
+                android:id="@+id/user_activity"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/button_main" />
 

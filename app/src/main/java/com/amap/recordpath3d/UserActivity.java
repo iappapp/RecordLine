@@ -2,19 +2,24 @@ package com.amap.recordpath3d;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMapException;
+import com.amap.api.maps.offlinemap.OfflineMapManager;
+import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
 import com.zcw.togglebutton.ToggleButton;
 
 /**
  * Created by tree on 16/12/29.
  */
-public class UserActivity extends Activity implements View.OnClickListener,ToggleButton.OnToggleChanged{
+public class UserActivity extends Activity implements View.OnClickListener,ToggleButton.OnToggleChanged, OfflineMapManager.OfflineMapDownloadListener{
 
     private TextView text_login_name;
     private ImageView image_user_detail;
@@ -25,7 +30,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     private LinearLayout layout_point;
     private LinearLayout layout_message;
     private ToggleButton toggle_sync;
-
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,9 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         setContentView(R.layout.about_me);
         initView();
         initEvent();
+        preferences = getSharedPreferences("config",MODE_PRIVATE);
+        initToggle();
+        //downloadOfflineMapByName("宁波市");
     }
 
     /**
@@ -84,9 +92,56 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     @Override
     public void onToggle(boolean on) {
         if(on){
-            //TODO
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("isNormalMap",true);
+            editor.commit();
         }else{
-            //TODO
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("isNormalMap",false);
+            editor.commit();
+        }
+    }
+
+    @Override
+    public void onDownload(int i, int i1, String s) {
+        Log.e("开始下载",s);
+    }
+
+    @Override
+    public void onCheckUpdate(boolean b, String s) {
+        if(b){
+            ToastUtils.showText(getApplicationContext(),s);
+        }
+    }
+
+
+    public void initToggle(){
+        if(preferences.getBoolean("isNormalMap",true)){
+            toggle_sync.setToggleOn();
+        }else{
+            toggle_sync.setToggleOff();
+        }
+    }
+
+    @Override
+    public void onRemove(boolean b, String s, String s1) {
+
+    }
+
+    public void downloadOfflineMapByName(String cityname){
+        OfflineMapManager mapManager = new OfflineMapManager(getApplicationContext(),this);
+        try {
+            mapManager.downloadByCityName(cityname);
+        }catch (AMapException ex){
+            Log.e("城市不存在",ex.getErrorMessage());
+        }
+    }
+    public void downloadOfflineMapByCode(String citycode){
+        OfflineMapManager mapManager = new OfflineMapManager(getApplicationContext(),this);
+        try {
+            mapManager.downloadByCityName("0571");
+        }catch (AMapException ex){
+            Log.e("城市编码不存在",ex.getErrorMessage());
         }
     }
 }

@@ -6,18 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.amap.adapter.PoiAdapter;
 import com.amap.database.DbAdapter;
 import com.amap.record.PoiRecord;
+import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 /**
  * Created by tree on 16/12/1.
@@ -58,7 +57,7 @@ public class PoiListActivity extends Activity implements AdapterView.OnItemClick
         PoiRecord record = poiRecords.get(position);
         int index = record.getId();
         if(db.deletePoiRecord(index)){
-            Toast.makeText(PoiListActivity.this,"成功删除",Toast.LENGTH_SHORT).show();
+            ToastUtils.showText(getApplicationContext(),"删除成功");
         }
         poiRecords.remove(position);
         poiAdapter.notifyDataSetChanged();
@@ -83,7 +82,7 @@ public class PoiListActivity extends Activity implements AdapterView.OnItemClick
             record.setName(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY__NAME)));
             record.setDescription(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DESCRIPTION)));
             record.setPoint(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_POINT)));
-            String date = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY__NAME));
+            String date = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DATE));
             try{
                 record.setTime(stringToDate(date));
             }catch (Exception ex){

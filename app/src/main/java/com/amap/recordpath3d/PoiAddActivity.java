@@ -10,8 +10,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.services.core.AMapException;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
@@ -51,8 +55,9 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
     private float radius;
     private String latLonType;
     private RegeocodeQuery query;
-    public String result = "";
-
+    private String result = "";
+    private MapView mapView = null;
+    private AMap aMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +65,44 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         setContentView(R.layout.poi_addactivity);
 
         point = getIntent().getParcelableExtra("point");
-        initView();
+        initView(savedInstanceState);
         initEvent();
         setupPoi();
         initHandler();
         queryLatlng();
+        initMap();
 
+    }
+
+    public void initMap(){
+        if(aMap == null){
+            aMap = mapView.getMap();
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
     @Override
@@ -117,7 +154,7 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         };
     }
 
-    public void initView(){
+    public void initView(Bundle savedInstanceState){
         poiGoback = (ImageButton) findViewById(R.id.poi_add_goback);
         poiSaveBtn = (Button) findViewById(R.id.poi_add_save);
         poiName = (EditText) findViewById(R.id.poi_add_name);
@@ -125,7 +162,8 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         poiAddress = (EditText) findViewById(R.id.poi_add_address);
         poiPosition = (EditText) findViewById(R.id.poi_add_position);
         poiToggleBtn = (ToggleButton) findViewById(R.id.poi_add_load_poi);
-
+        mapView = (MapView) findViewById(R.id.poi_add_mapview);
+        mapView.onCreate(savedInstanceState);
     }
 
     /**
@@ -147,8 +185,6 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
                 savePoi();
                 finish();
                 break;
-            case R.id.poi_add_load_poi:
-                break;
             default:
                 break;
         }
@@ -157,9 +193,12 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
     @Override
     public void onToggle(boolean on) {
         if(on){
-            Toast.makeText(PoiAddActivity.this,"开关打开",Toast.LENGTH_SHORT).show();
+            Marker marker = aMap.addMarker(new MarkerOptions().position(point).title(result).snippet(result));
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(17f));
+            //将地图中心移到地位点
+            aMap.moveCamera(CameraUpdateFactory.changeLatLng(point));
         }else{
-            Toast.makeText(PoiAddActivity.this,"开关关闭",Toast.LENGTH_SHORT).show();
+            aMap.clear();
         }
     }
 

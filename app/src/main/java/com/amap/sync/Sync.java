@@ -43,43 +43,42 @@ public class Sync {
         }
     }
 
-    public static void deletePoi(final Integer id,final CloseableHttpClient client,final String url){
+    public static void deletePoi(final Integer id,final CloseableHttpClient client,final String url) {
         HttpPost post = new HttpPost(url + "?id=" + id.intValue());
         try {
             client.execute(post);
-        }catch (IOException ex){
-            Log.e("IO异常,删除失败",ex.getMessage());
-        }
+        } catch (IOException ex) {
+            Log.e("IO异常,删除失败", ex.getMessage());
 
+        }
     }
 
 
     public static List<Integer> gainNeedSyncPoi(final CloseableHttpClient client,final String url){
-        HttpPost post = new HttpPost(url);
-        HttpResponse response;
-        HttpEntity httpEntity;
-        InputStream inputStream;
-        InputStreamReader reader;
-        char[] buffer = new char[1024];
-        int length = 0;
-        StringBuilder sb = new StringBuilder();
-        try{
-            response = client.execute(post);
-            httpEntity = response.getEntity();
-            inputStream = httpEntity.getContent();
-            reader = new InputStreamReader(inputStream,"utf-8");
-            while((length = reader.read(buffer,0,buffer.length)) != -1){
-                sb.append(buffer,0,length);
+            HttpPost post = new HttpPost(url);
+            HttpResponse response;
+            HttpEntity httpEntity;
+            InputStream inputStream;
+            InputStreamReader reader;
+            char[] buffer = new char[1024];
+            int length = 0;
+            StringBuilder sb = new StringBuilder();
+            try {
+                response = client.execute(post);
+                httpEntity = response.getEntity();
+                inputStream = httpEntity.getContent();
+                reader = new InputStreamReader(inputStream, "utf-8");
+                while ((length = reader.read(buffer, 0, buffer.length)) != -1) {
+                    sb.append(buffer, 0, length);
+                }
+                System.out.println("respone = " + sb.toString());
+                reader.close();
+                inputStream.close();
+            } catch (IOException ex) {
+                Log.e("IO异常", ex.getMessage());
             }
-            System.out.println("respone = " + sb.toString());
-            reader.close();
-            inputStream.close();
-        }catch (IOException ex){
-            Log.e("IO异常",ex.getMessage());
+            String result = sb.toString();
+            return new ArrayList<Integer>();
         }
-        String result = sb.toString();
-        return new ArrayList<>();
-    }
-
 
 }

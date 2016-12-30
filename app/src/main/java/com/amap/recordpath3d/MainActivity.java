@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.GpsSatellite;
@@ -51,6 +52,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.database.DbAdapter;
 import com.amap.record.PathRecord;
 import com.amap.util.Coordinate;
+import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
 
 /**
@@ -58,7 +60,7 @@ import com.example.recordpath3d.R;
  */
 public class MainActivity extends Activity implements LocationSource,
         AMapLocationListener, OnClickListener, AMap.OnMapClickListener,
-        GpsStatus.Listener, AMap.OnMapTouchListener, AMap.OnMapLongClickListener {
+        GpsStatus.Listener, AMap.OnMapLongClickListener {
 
     private MapView mapView;
     private AMap aMap;
@@ -74,7 +76,7 @@ public class MainActivity extends Activity implements LocationSource,
 
     //TODO
     private TextView locationInfo;
-    private ImageButton switchMapType;
+    private ImageButton buttonUserActivity;
     private boolean isNormalMode = false;
     private ImageView scaleImg;
     private TextView scaleInfo;
@@ -83,7 +85,7 @@ public class MainActivity extends Activity implements LocationSource,
     private ToggleButton linedistance;
     private TextView gpsStatus;
     private float scale;
-
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +100,7 @@ public class MainActivity extends Activity implements LocationSource,
         //MapsInitializer.sdcardDir =OffLineMapUtils.getSdCacheDir(this);
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
-
+        preferences = getSharedPreferences("config",MODE_PRIVATE);
         init();
         initpolyline();
 
@@ -117,7 +119,7 @@ public class MainActivity extends Activity implements LocationSource,
         //TODO
         //切换地图模式按钮
         locationInfo = (TextView) findViewById(R.id.location_speed_info);
-        switchMapType = (ImageButton) findViewById(R.id.map_type);
+        buttonUserActivity = (ImageButton) findViewById(R.id.user_activity);
 
         scaleImg = (ImageView) findViewById(R.id.scale_img);
         scaleInfo = (TextView) findViewById(R.id.scale_info);
@@ -126,7 +128,7 @@ public class MainActivity extends Activity implements LocationSource,
         linedistance = (ToggleButton) findViewById(R.id.linedistance);
         gpsStatus = (TextView) findViewById(R.id.satelitte_number);
 
-        switchMapType.setOnClickListener(this);
+        buttonUserActivity.setOnClickListener(this);
         linedistance.setOnClickListener(this);
         aMap.setOnMapClickListener(this);
         aMap.setOnMapLongClickListener(this);
@@ -136,6 +138,7 @@ public class MainActivity extends Activity implements LocationSource,
 
         btn = (ToggleButton) findViewById(R.id.locationbtn);
         btn.setOnClickListener(this);
+
     }
 
     protected void saverecord(PathRecord record) {
@@ -168,7 +171,7 @@ public class MainActivity extends Activity implements LocationSource,
                     record.getDate());
             DbHepler.close();
         } else {
-            Toast.makeText(MainActivity.this, "没有记录到路径", Toast.LENGTH_SHORT).show();
+            ToastUtils.showText(getApplicationContext(),"没有记录保存");
         }
     }
 
@@ -185,13 +188,20 @@ public class MainActivity extends Activity implements LocationSource,
     private void setUpMap() {
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-        aMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+        if(isCityMap()){
+            aMap.setMapType(AMap.MAP_TYPE_NORMAL);
+        }else
+            aMap.setMapType(AMap.MAP_TYPE_SATELLITE);
         aMap.getUiSettings().setCompassEnabled(true);
         aMap.getUiSettings().setRotateGesturesEnabled(true);
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
+    }
+
+    public boolean isCityMap(){
+        return preferences.getBoolean("isNormalMap",true);
     }
 
     /**
@@ -201,6 +211,10 @@ public class MainActivity extends Activity implements LocationSource,
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        if(isCityMap()){
+            aMap.setMapType(AMap.MAP_TYPE_NORMAL);
+        }else
+            aMap.setMapType(AMap.MAP_TYPE_SATELLITE);
     }
 
     /**
@@ -264,7 +278,6 @@ public class MainActivity extends Activity implements LocationSource,
                     //点击定位按钮，能够将地图的中心点移到地位点
                     mListener.onLocationChanged(amapLocation);
                     isFirstLocation = false;
-                    updateScaleInfo();
                 }
 
                 if (btn.isChecked()) {
@@ -308,8 +321,7 @@ public class MainActivity extends Activity implements LocationSource,
     }
 
     /**
-     * 将多点连接起来
-     *
+     * 将多点连接起来绘制行走路线
      * @param latLngs 坐标点集合
      */
     public void redrawline(List<LatLng> latLngs) {
@@ -324,6 +336,10 @@ public class MainActivity extends Activity implements LocationSource,
         }
     }
 
+    /**
+     * 计算集合内点集合的距离
+     * @param latLngs 坐标点的集合
+     */
     public void distance2Points(List<LatLng> latLngs) {
 
         double distance = 0.0d;
@@ -332,9 +348,13 @@ public class MainActivity extends Activity implements LocationSource,
                 for (int j = i + 1; j <= latLngs.size() - 1; j++)
                     distance += AMapUtils.calculateLineDistance(latLngs.get(i), latLngs.get(j));
             }
+            ToastUtils.showText(getApplicationContext(),"距离为" + distance + "M");
         }
         //显示距离两点
-        Toast.makeText(getApplicationContext(), "" + distance, Toast.LENGTH_SHORT).show();
+        else{
+            ToastUtils.showText(getApplicationContext(),"请选择两个以上的点");
+        }
+
         latLngs.clear();
     }
 
@@ -355,16 +375,9 @@ public class MainActivity extends Activity implements LocationSource,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.map_type:
-                if (isNormalMode) {
-                    aMap.setMapType(AMap.MAP_TYPE_SATELLITE);
-                    switchMapType.setImageResource(R.drawable.satelitte1);
-                    isNormalMode = false;
-                } else {
-                    aMap.setMapType(AMap.MAP_TYPE_NORMAL);
-                    switchMapType.setImageResource(R.drawable.normal_city);
-                    isNormalMode = true;
-                }
+            case R.id.user_activity:
+                Intent userActivity = new Intent(getApplicationContext(),UserActivity.class);
+                startActivity(userActivity);
                 break;
 
             case R.id.linedistance:
@@ -462,7 +475,6 @@ public class MainActivity extends Activity implements LocationSource,
     /**
      * 做手动规划路径使用
      * 点击地图aMap就更新顶部的信息栏
-     *
      * @param latLng 当前点击位置的坐标
      */
     @Override
@@ -509,14 +521,6 @@ public class MainActivity extends Activity implements LocationSource,
         gpsStatus.setText(String.valueOf(count));
     }
 
-    @Override
-    public void onTouch(MotionEvent motionEvent) {
-        float scale = aMap.getScalePerPixel();
-        if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && scale != this.scale) {
-            updateScaleInfo();
-        }
-        this.scale = scale;
-    }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
