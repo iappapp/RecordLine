@@ -52,8 +52,6 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
 
     private GeocodeSearch search;
     private LatLonPoint latLonPoint;
-    private float radius;
-    private String latLonType;
     private RegeocodeQuery query;
     private String result = "";
     private MapView mapView = null;
@@ -67,11 +65,10 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         point = getIntent().getParcelableExtra("point");
         initView(savedInstanceState);
         initEvent();
-        setupPoi();
         initHandler();
         queryLatlng();
+        setupPoi();
         initMap();
-
     }
 
     public void initMap(){
@@ -132,7 +129,7 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
         search = new GeocodeSearch(PoiAddActivity.this);
         search.setOnGeocodeSearchListener(this);
         latLonPoint = new LatLonPoint(point.latitude,point.longitude);
-        query = new RegeocodeQuery(latLonPoint,20f,GeocodeSearch.AMAP);
+        query = new RegeocodeQuery(latLonPoint,10f,GeocodeSearch.AMAP);
         search.getFromLocationAsyn(query);
     }
 
@@ -207,6 +204,7 @@ public class PoiAddActivity extends Activity implements View.OnClickListener,Tog
     }
 
     public void savePoi(){
+
         dbAdapter = new DbAdapter(PoiAddActivity.this);
         try{
             dbAdapter.open();

@@ -29,7 +29,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     private LinearLayout layout_path;
     private LinearLayout layout_point;
     private LinearLayout layout_message;
-    private ToggleButton toggle_sync;
+    private ToggleButton toggle_mapmode;
     private SharedPreferences preferences;
 
     @Override
@@ -40,6 +40,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         initEvent();
         preferences = getSharedPreferences("config",MODE_PRIVATE);
         initToggle();
+
         //downloadOfflineMapByName("宁波市");
     }
 
@@ -56,7 +57,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         layout_path = (LinearLayout) findViewById(R.id.layout_path);
         layout_point = (LinearLayout) findViewById(R.id.layout_point);
         layout_message = (LinearLayout) findViewById(R.id.layout_message);
-        toggle_sync = (ToggleButton) findViewById(R.id.toggle_sync);
+        toggle_mapmode = (ToggleButton) findViewById(R.id.toggle_mapmode);
     }
 
     public void initEvent(){
@@ -64,7 +65,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         layout_point.setOnClickListener(this);
         layout_message.setOnClickListener(this);
         image_user_detail.setOnClickListener(this);
-        toggle_sync.setOnToggleChanged(this);
+        toggle_mapmode.setOnToggleChanged(this);
     }
 
     @Override
@@ -117,9 +118,9 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
 
     public void initToggle(){
         if(preferences.getBoolean("isNormalMap",true)){
-            toggle_sync.setToggleOn();
+            toggle_mapmode.setToggleOn();
         }else{
-            toggle_sync.setToggleOff();
+            toggle_mapmode.setToggleOff();
         }
     }
 
