@@ -20,7 +20,6 @@ android {
     }
 
 
-
     productFlavors {
     }
 }
@@ -28,5 +27,6 @@ android {
 dependencies {
     compile files('libs/AMap3DMap_4.1.2.jar')
     compile 'com.android.support:support-v4:19.0.0'
-
+    compile files('libs/fastjson-1.1.41.jar')
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
 }

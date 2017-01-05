@@ -1,14 +1,13 @@
 package com.amap.sync;
 
+import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.amap.record.PoiRecord;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +23,7 @@ import java.util.List;
  */
 public class Sync{
 
-    public static void insertObject(final Object object,final CloseableHttpClient client,final String url){
+    public static void insertObject(final Object object, final AndroidHttpClient client, final String url){
         HttpPost post = new HttpPost(url);
         post.setHeader("Accept","application/json");
         post.setHeader("Content-Type","application/json");
@@ -43,7 +42,7 @@ public class Sync{
         }
     }
 
-    public static void deletePoi(final Integer id,final CloseableHttpClient client,final String url) {
+    public static void deletePoi(final Integer id,final AndroidHttpClient client,final String url) {
         HttpPost post = new HttpPost(url + "?id=" + id.intValue());
         try {
             client.execute(post);
@@ -54,7 +53,7 @@ public class Sync{
     }
 
 
-    public static List<Integer> gainNeedSyncPoi(final CloseableHttpClient client,final String url){
+    public static List<Integer> gainNeedSyncPoi(final AndroidHttpClient client,final String url){
             HttpPost post = new HttpPost(url);
             HttpResponse response;
             HttpEntity httpEntity;
