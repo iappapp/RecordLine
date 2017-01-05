@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DbAdapter {
+
     private final static String DATABASE_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/recordPath";
     static final String DATABASE_NAME = DATABASE_PATH + "/" + "record.db";
     private static final int DATABASE_VERSION = 3;
@@ -67,7 +69,6 @@ public class DbAdapter {
 
     //remove an entry
     public boolean delete(long rowId) {
-
         return db.delete(RECORD_TABLE, "id=" + rowId, null) > 0;
     }
 
@@ -96,6 +97,13 @@ public class DbAdapter {
         return db.query(RECORD_TABLE, new String[]{KEY_DISTANCE, KEY_DURATION, KEY_SPEED, KEY_LINE, KEY_STRAT, KEY_END, KEY_DATE}, null, null, null, null, null);
     }
 
+    public int getAllRecords(){
+        if(getallrecord() != null)
+            return getallrecord().getCount();
+        else
+            return 0;
+    }
+
     private static final String POI_TABLE = "poirecord";
     private static final String POI_CREATE =
             "create table if not exists poirecord("
@@ -112,12 +120,10 @@ public class DbAdapter {
     }
 
 
-    //public static final String KEY_ROWID = "id";
     public static final String KEY__NAME = "name";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_POINT = "point";
     public static final String KEY_ADDRESS = "address";
-    //public static final String KEY_DATE = "date";
 
 
     public boolean createRecord(String name,String description, String address, String point,String time) {
@@ -134,11 +140,18 @@ public class DbAdapter {
         return db.query(POI_TABLE, new String[]{KEY_ROWID, KEY__NAME, KEY_DESCRIPTION, KEY_POINT, KEY_ADDRESS, KEY_DATE}, null, null, null, null, null);
     }
 
+    public int getAllPoiRecords(){
+        if(getAllPoiRecord() != null)
+            return getAllPoiRecord().getCount();
+        else
+            return 0;
+    }
+
     public boolean deletePoiRecord(int id){
         return db.delete(POI_TABLE,"id=" + id,null) > 0;
     }
 
-    private static final String MAN_TABLE = "manualrecord";
+    private static final String MAN_TABLE = "record_man";
     private static final String MANUAL_CREATE =
             "create table if not exists record_man("
                     + "id integer primary key,"
@@ -160,13 +173,6 @@ public class DbAdapter {
         return db.delete(MAN_TABLE, "id=" + rowId, null) > 0;
     }
 
-    //public static final String KEY_ROWID = "id";
-    //public static final String KEY_DISTANCE = "distance";
-    //public static final String KEY_DESCRIPTION = "description";
-    //public static final String KEY_LINE = "pathline";
-    //public static final String KEY_STRAT = "stratpoint";
-    //public static final String KEY_END = "endpoint";
-    //public static final String KEY_DATE = "date";
 
     public long createManualRecord(String distance, String description, String pathline, String stratpoint, String endpoint, String date) {
         ContentValues args = new ContentValues();
@@ -181,6 +187,13 @@ public class DbAdapter {
 
     public Cursor getAllManualRecord() {
         return db.query(MAN_TABLE, new String[]{KEY_DISTANCE, KEY_DESCRIPTION, KEY_LINE, KEY_STRAT, KEY_END, KEY_DATE}, null, null, null, null, null);
+    }
+
+    public int getAllManualRecords(){
+        if(getAllManualRecord() != null)
+            return getAllManualRecord().getCount();
+        else
+            return 0;
     }
 }
 

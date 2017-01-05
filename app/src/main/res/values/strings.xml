@@ -14,4 +14,6 @@
     <string name="auto_sync">自动同步</string>
     <string name="auto_update">自动更新</string>
     <string name="message">消息</string>
+    <string name="mapNormal">城市地图</string>
+    <string name="mapSate">卫星地图</string>
 </resources>

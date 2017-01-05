@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.amap.api.maps.AMapException;
 import com.amap.api.maps.offlinemap.OfflineMapManager;
+import com.amap.database.DbAdapter;
 import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
 import com.zcw.togglebutton.ToggleButton;
@@ -31,6 +32,8 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     private LinearLayout layout_message;
     private ToggleButton toggle_mapmode;
     private SharedPreferences preferences;
+    private DbAdapter db;
+    private boolean isLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +43,18 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         initEvent();
         preferences = getSharedPreferences("config",MODE_PRIVATE);
         initToggle();
-
-        //downloadOfflineMapByName("宁波市");
+        initRecord();
     }
+
+
+    public void initRecord(){
+        db = new DbAdapter(getApplicationContext());
+        db.open();
+        text_point_detail.setText(String.valueOf(db.getAllPoiRecords()));
+        text_path_detail.setText(String.valueOf(db.getAllManualRecords() + db.getAllRecords()));
+        db.close();
+    }
+
 
     /**
      * 初始化视图组件
@@ -61,6 +73,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     }
 
     public void initEvent(){
+        text_login_name.setOnClickListener(this);
         layout_path.setOnClickListener(this);
         layout_point.setOnClickListener(this);
         layout_message.setOnClickListener(this);
@@ -83,8 +96,17 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
                 //TODO
                 break;
             case R.id.user_detail:
-                //TODO
+                Intent userLogin = new Intent(getApplicationContext(),UserLoginActivity.class);
+                if(isLogin){
+
+                }
+                else{
+                    startActivity(userLogin);
+                }
                 break;
+            case R.id.user_login :
+                Intent userLogin2 = new Intent(getApplicationContext(),UserLoginActivity.class);
+                startActivity(userLogin2);
             default:
                 break;
         }
@@ -95,6 +117,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         if(on){
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("isNormalMap",true);
+
             editor.commit();
         }else{
             SharedPreferences.Editor editor = preferences.edit();

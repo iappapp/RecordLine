@@ -22,13 +22,13 @@ import java.util.List;
  * 使用Json
  * Created by app on 16/12/25.
  */
-public class Sync {
+public class Sync{
 
-    public static void insertPoi(final PoiRecord poi,final CloseableHttpClient client,final String url){
+    public static void insertObject(final Object object,final CloseableHttpClient client,final String url){
         HttpPost post = new HttpPost(url);
         post.setHeader("Accept","application/json");
         post.setHeader("Content-Type","application/json");
-        String poistring = JSON.toJSONString(poi);
+        String poistring = JSON.toJSONString(object);
         StringEntity entity = null;
         try {
             entity = new StringEntity(poistring, "utf-8");
@@ -80,5 +80,4 @@ public class Sync {
             String result = sb.toString();
             return new ArrayList<Integer>();
         }
-
 }

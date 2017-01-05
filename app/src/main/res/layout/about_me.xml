@@ -71,7 +71,9 @@
             <TextView
                 android:id="@+id/user_path_detail"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="15dp"
+                android:textSize="10sp"
+                android:gravity="center_horizontal" />
 
         </LinearLayout>
 
@@ -93,13 +95,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:gravity="center_horizontal"
-                android:text="@string/path" />
+                android:text="@string/poi_point" />
 
             <TextView
                 android:id="@+id/user_poi_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="15dp"
+                android:gravity="center_horizontal"
                 android:textSize="10sp" />
 
 
@@ -128,7 +130,9 @@
             <TextView
                 android:id="@+id/user_message_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="15dp"
+                android:textSize="10sp"
+                android:gravity="center_horizontal" />
 
 
         </LinearLayout>
@@ -247,7 +251,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:text="@string/auto_sync"
+            android:text="@string/mapNormal"
             android:textSize="30sp" />
 
         <com.zcw.togglebutton.ToggleButton
