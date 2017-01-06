@@ -1,8 +1,12 @@
 package com.amap.recordpath3d;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,11 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapException;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.offlinemap.OfflineMapManager;
 import com.amap.database.DbAdapter;
 import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
 import com.zcw.togglebutton.ToggleButton;
+
+import java.io.FileNotFoundException;
 
 /**
  * Created by tree on 16/12/29.
@@ -34,6 +41,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     private SharedPreferences preferences;
     private DbAdapter db;
     private boolean isLogin = false;
+    private final  static int USER_ICON = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         preferences = getSharedPreferences("config",MODE_PRIVATE);
         initToggle();
         initRecord();
+        initUserIcon();
     }
 
 
@@ -55,6 +64,14 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         db.close();
     }
 
+
+    public void initUserIcon(){
+        if(isLogin){
+
+        }else{
+            image_user_detail.setImageResource(R.drawable.default_user);
+        }
+    }
 
     /**
      * 初始化视图组件
@@ -167,5 +184,41 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         }catch (AMapException ex){
             Log.e("城市编码不存在",ex.getErrorMessage());
         }
+    }
+
+    public void selectUserIconIntent(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,USER_ICON);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data == null){
+            return;
+        }
+        if(resultCode == USER_ICON){
+            Uri image = data.getData();
+            ContentResolver resolver = this.getContentResolver();
+            try{
+                Bitmap bitmap = BitmapFactory.decodeStream(resolver.openInputStream(image));
+                image_user_detail.setImageBitmap(bitmap);
+            }catch (FileNotFoundException ex){
+                Log.i("File Not Found",ex.getMessage());
+            }
+        }
+        super.onActivityResult(requestCode,resultCode,data);
+    }
+
+    public void userIconUpload(Uri uri){
+        //TODO
+    }
+
+    public boolean checkLogin(){
+        SharedPreferences preferences = this.getSharedPreferences("config",MODE_PRIVATE);
+        String username = preferences.getString("name",null);
+        String password = preferences.getString("password",null);
+
     }
 }
