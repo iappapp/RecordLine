@@ -219,6 +219,6 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         SharedPreferences preferences = this.getSharedPreferences("config",MODE_PRIVATE);
         String username = preferences.getString("name",null);
         String password = preferences.getString("password",null);
-
+        return true;
     }
 }
