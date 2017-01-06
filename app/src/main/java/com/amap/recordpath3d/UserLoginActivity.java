@@ -9,9 +9,11 @@ import android.os.Message;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.alibaba.fastjson.JSON;
 import com.amap.util.Config;
 import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
@@ -26,6 +28,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okio.BufferedSink;
 
 /**
  * Created by tree on 17/1/1.
@@ -71,10 +82,10 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                     case SUCCEED:
                         String message = (String)msg.obj;
                         Pair<Integer,String> pair = handleJsonString(message);
-                        if(pair.first == 1){
+                        if(pair != null && pair.first == 1){
                             ToastUtils.showText(getApplicationContext(),pair.second);
                         }else{
-                            ToastUtils.showText(getApplicationContext(),pair.second);
+                            ToastUtils.showText(getApplicationContext(),"消息解析出错");
                         }
 
                 }
@@ -118,17 +129,47 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
     //TODO
     //TEST
     public void tryLogin(){
-        String username = login_username.getText().toString().trim();
+        final String username = login_username.getText().toString().trim();
         String password = login_password.getText().toString().trim();
-
-
-
         String url = Config.HOST + ":" + Config.PORT +
                 "/user/login.do?name=" + username +
                 "&uuid=" + password;
+        postUrl(url);
+    }
 
-        PostThread thread = new PostThread(url,handler);
-        thread.run();
+    public void postUrl(String url){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(new RequestBody() {
+                    @Override
+                    public MediaType contentType() {
+                        return MediaType.parse("json/application");
+                    }
+
+                    @Override
+                    public void writeTo(BufferedSink sink) throws IOException {
+
+                    }
+                })
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("Failure=",e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String message = response.body().string();
+                Log.e("Message=",message);
+                Message message1 = new Message();
+                message1.what = SUCCEED;
+                message1.obj = message;
+                handler.sendMessage(message1);
+            }
+        });
 
     }
 
@@ -138,8 +179,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
         String url = Config.HOST + ":" + Config.PORT +
                 "/user/register.do?name=" + username +
                 "&uuid=" + password;
-        PostThread thread = new PostThread(url,handler);
-        thread.run();
+        postUrl(url);
     }
 
     /**
@@ -152,37 +192,4 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                 && !login_password.getText().toString().equals("");
     }
 
-    public class PostThread extends Thread{
-        private String url;
-        private Handler handler;
-
-        public PostThread(String url, Handler handler) {
-            this.url = url;
-            this.handler = handler;
-        }
-
-        @Override
-        public void run() {
-            HttpClient client = AndroidHttpClient.newInstance("");
-            HttpPost post = new HttpPost(this.url);
-            HttpResponse response = null;
-            HttpEntity entity = null;
-            try {
-                response = client.execute(post);
-                if(response.getStatusLine().getStatusCode() == 200){
-                    entity = response.getEntity();
-                    Message message = new Message();
-                    message.what = SUCCEED;
-                    message.obj = EntityUtils.toString(entity);
-                    this.handler.sendMessage(message);
-                }else{
-                    Message message = new Message();
-                    message.what = FAIL;
-                    this.handler.sendMessage(message);
-                }
-            }catch (IOException ex){
-
-            }
-        }
-    }
 }

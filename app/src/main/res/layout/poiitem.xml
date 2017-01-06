@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/poi_list_sing_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/poi_list_item">
+        android:background="@android:color/darker_gray">
 
         <ImageView
             android:layout_width="match_parent"
@@ -31,17 +31,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/poi_list_name"
                 android:layout_gravity="left"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 />
             <TextView
                 android:id="@+id/poi_position"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/poi_list_point"
                 android:layout_gravity="left"
-                android:textSize="10sp"
+                android:textSize="15sp"
                 />
 
         </LinearLayout>
     </LinearLayout>
-
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/background_dark"
+        android:id="@+id/poi_content_line"></LinearLayout>
 </LinearLayout>
