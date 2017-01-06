@@ -9,8 +9,8 @@
     <dimen name="poi_singlecontent">50dp</dimen>
     <dimen name="poi_single_title">30sp</dimen>
     <dimen name="poi_list_sing_content">50dp</dimen>
-    <dimen name="poi_list_name">35dp</dimen>
-    <dimen name="poi_list_point">15dp</dimen>
+    <dimen name="poi_list_name">30dp</dimen>
+    <dimen name="poi_list_point">20dp</dimen>
 
     <!--user_login-->
     <dimen name="user_menu_single">40dp</dimen>
