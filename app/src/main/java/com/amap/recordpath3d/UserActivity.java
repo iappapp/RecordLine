@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapException;
-import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.offlinemap.OfflineMapManager;
 import com.amap.database.DbAdapter;
 import com.amap.util.ToastUtils;
@@ -42,6 +41,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     private DbAdapter db;
     private boolean isLogin = false;
     private final  static int USER_ICON = 1;
+    private final  static int LOGIN = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
 
                 }
                 else{
-                    startActivity(userLogin);
+                    startActivityForResult(userLogin, LOGIN);
                 }
                 break;
             case R.id.user_login :

@@ -50,6 +50,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
     private Handler handler;
     private final static int SUCCEED = 1;
     private final static int FAIL = 0;
+    private final static int LOGIN = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,11 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                         Pair<Integer,String> pair = handleJsonString(message);
                         if(pair != null && pair.first == 1){
                             ToastUtils.showText(getApplicationContext(),pair.second);
+                            Intent intent = new Intent();
+                            intent.putExtra("name",login_username.getText().toString().trim());
+                            intent.putExtra("password",login_password.getText().toString().trim());
+                            setResult(LOGIN,intent);
+                            finish();
                         }else{
                             ToastUtils.showText(getApplicationContext(),"消息解析出错");
                         }
