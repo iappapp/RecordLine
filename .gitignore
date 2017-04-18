@@ -3,4 +3,6 @@
 app/build/
 build/
 gradle/
+app/app.iml
+app/src/main/AndroidManifest.xml
 .DS_Store
