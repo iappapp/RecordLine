@@ -41,6 +41,14 @@ import okio.BufferedSink;
 /**
  * Created by tree on 17/1/1.
  */
+
+/**
+ * 登陆逻辑固定
+ * 设置登陆布尔值
+ * 如为登陆则进行登陆尝试,如不成功则返回消息
+ * 登陆成功将布尔值修改,同时保存登录信息
+ * 登陆信息不进行加密处理,直接明文减少系统设计复杂度
+ */
 public class UserLoginActivity extends Activity implements View.OnClickListener{
     private EditText login_username;
     private EditText login_password;
@@ -71,7 +79,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
 
 
     }
-
+    //TODO同一消息格式
     /**
      * 处理线程运行返回的结果
      */
@@ -85,11 +93,6 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                         Pair<Integer,String> pair = handleJsonString(message);
                         if(pair != null && pair.first == 1){
                             ToastUtils.showText(getApplicationContext(),pair.second);
-                            Intent intent = new Intent();
-                            intent.putExtra("name",login_username.getText().toString().trim());
-                            intent.putExtra("password",login_password.getText().toString().trim());
-                            setResult(LOGIN,intent);
-                            finish();
                         }else{
                             ToastUtils.showText(getApplicationContext(),"消息解析出错");
                         }
@@ -99,6 +102,9 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
         };
     }
 
+    //直接返回消息类的JSON数据
+    //json数据直接解析对应类
+    @Deprecated
     public Pair<Integer,String> handleJsonString(String message){
         try {
             JSONObject object = new JSONObject(message);
@@ -132,8 +138,9 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
             tryRegister();
         }
     }
-    //TODO
+    //TODO统一消息格式
     //TEST
+
     public void tryLogin(){
         final String username = login_username.getText().toString().trim();
         String password = login_password.getText().toString().trim();
@@ -169,7 +176,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String message = response.body().string();
-                Log.e("Message=",message);
+                Log.i("Message=",message);
                 Message message1 = new Message();
                 message1.what = SUCCEED;
                 message1.obj = message;
