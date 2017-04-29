@@ -1,4 +1,4 @@
-package com.amap.recordpath3d;
+package com.amap.activity;
 
 import android.app.Activity;
 import android.database.Cursor;

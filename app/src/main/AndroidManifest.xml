@@ -33,7 +33,7 @@
             android:name="com.amap.api.v2.apikey"
             android:value="5b1b55291948fb1273455953bc2afe9e" />
         <activity
-            android:name="com.amap.recordpath3d.MainActivity"
+            android:name="com.amap.activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,26 +43,26 @@
         </activity>
         <!--轨迹记录页面-->
         <activity
-            android:name="com.amap.recordpath3d.RecordActivity"
+            android:name="com.amap.activity.RecordActivity"
             android:label="@string/app_name" >
         </activity>
         <!--轨迹再现页面-->
         <activity
-            android:name="com.amap.recordpath3d.RecordShowActivity"
+            android:name="com.amap.activity.RecordShowActivity"
             android:label="@string/app_name" >
         </activity>
         <!--兴趣点内容补充页面-->
-        <activity android:name="com.amap.recordpath3d.PoiAddActivity"
+        <activity android:name="com.amap.activity.PoiAddActivity"
             android:label="@string/app_name" >
         </activity>
         <!--兴趣点列表页面-->
 
-        <activity android:name="com.amap.recordpath3d.PoiListActivity"
+        <activity android:name="com.amap.activity.PoiListActivity"
             />
         <!--用户详情页面-->
-        <activity android:name="com.amap.recordpath3d.UserActivity" />
+        <activity android:name="com.amap.activity.UserActivity" />
         <!--用户登录注册界面-->
-        <activity android:name="com.amap.recordpath3d.UserLoginActivity" />
+        <activity android:name="com.amap.activity.UserLoginActivity" />
 
         <service android:name="com.amap.api.location.APSService" ></service>
     </application>

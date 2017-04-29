@@ -1,15 +1,11 @@
-package com.amap.recordpath3d;
+package com.amap.activity;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -17,15 +13,6 @@ import com.alibaba.fastjson.JSON;
 import com.amap.util.Config;
 import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -89,64 +76,44 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case SUCCEED:
-                        String message = (String)msg.obj;
-                        Pair<Integer,String> pair = handleJsonString(message);
-                        if(pair != null && pair.first == 1){
-                            ToastUtils.showText(getApplicationContext(),pair.second);
+                        String string = (String)msg.obj;
+                        com.amap.modal.Message message = JSON.parseObject(string,com.amap.modal.Message.class);
+                        if(message != null && message.getCode() == 1){
+                            ToastUtils.showText(getApplicationContext(),message.getMsg());
+                        }else if(message != null && message.getCode() != 1){
+                            ToastUtils.showText(getApplicationContext(),message.getMsg());
                         }else{
-                            ToastUtils.showText(getApplicationContext(),"消息解析出错");
+                            ToastUtils.showText(getApplicationContext(),"请检查网络");
                         }
-
                 }
             }
         };
     }
-
-    //直接返回消息类的JSON数据
-    //json数据直接解析对应类
-    @Deprecated
-    public Pair<Integer,String> handleJsonString(String message){
-        try {
-            JSONObject object = new JSONObject(message);
-            String msg = object.getString("message");
-            int code = object.getInt("code");
-            return new Pair<>(code,msg);
-        }catch (JSONException ex){
-            Log.e("解析错误",ex.getMessage());
-            return null;
-        }
-
-    }
-
 
     public void initEvent(){
         user_login.setOnClickListener(this);
         user_register.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
-
-        if(!isNullorEmpty()){
+        String userName = login_username.getText().toString().trim();
+        String password = login_password.getText().toString().trim();
+        if("".equals(userName) || "".equals(password)){
             ToastUtils.showText(getApplicationContext(),"请输入密码或用户名");
             return;
         }
         if(v.getId() == R.id.btn_login){
-            tryLogin();
+            tryLogin(userName,password);
         }else if(v.getId() == R.id.btn_register){
-            tryRegister();
+            tryRegister(userName,password);
         }
     }
-    //TODO统一消息格式
-    //TEST
 
-    public void tryLogin(){
-        final String username = login_username.getText().toString().trim();
-        String password = login_password.getText().toString().trim();
+    public void tryLogin(final String userName,final String password){
         String url = Config.HOST + ":" + Config.PORT +
-                "/user/login.do?name=" + username +
-                "&uuid=" + password;
+                "/user/login.do?name=" + userName +
+                "&password=" + password;
         postUrl(url);
     }
 
@@ -186,23 +153,11 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
 
     }
 
-    public void  tryRegister(){
-        String username = login_username.getText().toString().trim();
-        String password = login_password.getText().toString().trim();
+    public void  tryRegister(final String userName, final String password){
         String url = Config.HOST + ":" + Config.PORT +
-                "/user/register.do?name=" + username +
-                "&uuid=" + password;
-        postUrl(url);
-    }
-
-    /**
-     * 用户名不为空
-     * 密码不为空
-     * @return 两者不为空返回true
-     */
-    public boolean isNullorEmpty(){
-        return !login_username.getText().toString().equals("")
-                && !login_password.getText().toString().equals("");
+                "/user/register.do?name=" + userName +
+                "&password=" + password;
+        this.postUrl(url);
     }
 
 }

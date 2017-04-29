@@ -1,4 +1,4 @@
-package com.amap.message;
+package com.amap.modal;
 
 /**
  * Created by tree on 17/2/18.

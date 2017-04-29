@@ -140,7 +140,7 @@ public class DbAdapter {
         return db.query(POI_TABLE, new String[]{KEY_ROWID, KEY__NAME, KEY_DESCRIPTION, KEY_POINT, KEY_ADDRESS, KEY_DATE}, null, null, null, null, null);
     }
 
-    public int getAllPoiRecords(){
+    public int getAllPoiRecordsCount(){
         if(getAllPoiRecord() != null)
             return getAllPoiRecord().getCount();
         else

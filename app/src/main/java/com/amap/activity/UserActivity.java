@@ -1,4 +1,4 @@
-package com.amap.recordpath3d;
+package com.amap.activity;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -59,12 +59,14 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     public void initRecord(){
         db = new DbAdapter(getApplicationContext());
         db.open();
-        text_point_detail.setText(String.valueOf(db.getAllPoiRecords()));
-        text_path_detail.setText(String.valueOf(db.getAllManualRecords() + db.getAllRecords()));
+        int poiCount = db.getAllPoiRecordsCount();
+        int pathCount = db.getAllManualRecords() + db.getAllRecords();
+        text_point_detail.setText(String.format("共%s条",poiCount));
+        text_path_detail.setText(String.format("共%s条",pathCount));
         db.close();
     }
 
-
+    //新开线程下载图片
     public void initUserIcon(){
         if(isLogin){
 
@@ -110,7 +112,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
                 startActivity(intent);
                 break;
             case R.id.layout_message:
-                //TODO
+                //
                 break;
             case R.id.user_detail:
                 Intent userLogin = new Intent(getApplicationContext(),UserLoginActivity.class);
@@ -211,8 +213,8 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         super.onActivityResult(requestCode,resultCode,data);
     }
 
+    //图片上传
     public void userIconUpload(Uri uri){
-        //TODO
     }
 
     public boolean checkLogin(){
