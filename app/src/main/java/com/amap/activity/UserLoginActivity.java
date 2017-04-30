@@ -13,8 +13,9 @@ import com.alibaba.fastjson.JSON;
 import com.amap.util.Config;
 import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
-
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -34,7 +35,7 @@ import okio.BufferedSink;
  * 设置登陆布尔值
  * 如为登陆则进行登陆尝试,如不成功则返回消息
  * 登陆成功将布尔值修改,同时保存登录信息
- * 登陆信息不进行加密处理,直接明文减少系统设计复杂度
+ * 登陆信息不进行加密处理,直接明文交换数据
  */
 public class UserLoginActivity extends Activity implements View.OnClickListener{
     private EditText login_username;
@@ -44,8 +45,6 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
     private Button user_register;
     private Handler handler;
     private final static int SUCCEED = 1;
-    private final static int FAIL = 0;
-    private final static int LOGIN = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +78,9 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                         String string = (String)msg.obj;
                         com.amap.modal.Message message = JSON.parseObject(string,com.amap.modal.Message.class);
                         if(message != null && message.getCode() == 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMsg());
+                            ToastUtils.showText(getApplicationContext(),message.getMessageg());
                         }else if(message != null && message.getCode() != 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMsg());
+                            ToastUtils.showText(getApplicationContext(),message.getMessageg());
                         }else{
                             ToastUtils.showText(getApplicationContext(),"请检查网络");
                         }
@@ -99,7 +98,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         String userName = login_username.getText().toString().trim();
         String password = login_password.getText().toString().trim();
-        if("".equals(userName) || "".equals(password)){
+        if(StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)){
             ToastUtils.showText(getApplicationContext(),"请输入密码或用户名");
             return;
         }
@@ -114,10 +113,10 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
         String url = Config.HOST + ":" + Config.PORT +
                 "/user/login.do?name=" + userName +
                 "&password=" + password;
-        postUrl(url);
+        postUrl(url,null);
     }
 
-    public void postUrl(String url){
+    public void postUrl(String url,Map<String,String> header){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
@@ -139,7 +138,6 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
             public void onFailure(Call call, IOException e) {
                 Log.e("Failure=",e.getMessage());
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String message = response.body().string();
@@ -157,7 +155,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
         String url = Config.HOST + ":" + Config.PORT +
                 "/user/register.do?name=" + userName +
                 "&password=" + password;
-        this.postUrl(url);
+        this.postUrl(url,null);
     }
 
 }

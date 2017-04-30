@@ -2,12 +2,16 @@ package com.amap.activity;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,11 +21,23 @@ import android.widget.TextView;
 import com.amap.api.maps.AMapException;
 import com.amap.api.maps.offlinemap.OfflineMapManager;
 import com.amap.database.DbAdapter;
+import com.amap.util.Config;
 import com.amap.util.ToastUtils;
 import com.example.recordpath3d.R;
 import com.zcw.togglebutton.ToggleButton;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by tree on 16/12/29.
@@ -39,17 +55,20 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     private ToggleButton toggle_mapmode;
     private SharedPreferences preferences;
     private DbAdapter db;
+    private Handler handler;
     private boolean isLogin = false;
     private final  static int USER_ICON = 1;
     private final  static int LOGIN = 2;
+    private static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_me);
+
+        preferences = getSharedPreferences("config",MODE_PRIVATE);
         initView();
         initEvent();
-        preferences = getSharedPreferences("config",MODE_PRIVATE);
         initToggle();
         initRecord();
         initUserIcon();
@@ -66,9 +85,12 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         db.close();
     }
 
-    //新开线程下载图片
+    //新开线程下载图片根据登陆信息
+    //设置头像文件下载地址
     public void initUserIcon(){
+        isLogin = checkLogin();
         if(isLogin){
+            //先检查服务端有无图像文件
 
         }else{
             image_user_detail.setImageResource(R.drawable.default_user);
@@ -91,6 +113,9 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         toggle_mapmode = (ToggleButton) findViewById(R.id.toggle_mapmode);
     }
 
+    /**
+     * 初始化事件监听
+     */
     public void initEvent(){
         text_login_name.setOnClickListener(this);
         layout_path.setOnClickListener(this);
@@ -145,6 +170,9 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         }
     }
 
+    /**
+     * 地图下载功能
+     */
     @Override
     public void onDownload(int i, int i1, String s) {
         Log.e("开始下载",s);
@@ -156,7 +184,6 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
             ToastUtils.showText(getApplicationContext(),s);
         }
     }
-
 
     public void initToggle(){
         if(preferences.getBoolean("isNormalMap",true)){
@@ -171,6 +198,10 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
 
     }
 
+    /**
+     * 根据城市名下载离线地图
+     * @param cityname
+     */
     public void downloadOfflineMapByName(String cityname){
         OfflineMapManager mapManager = new OfflineMapManager(getApplicationContext(),this);
         try {
@@ -179,6 +210,11 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
             Log.e("城市不存在",ex.getErrorMessage());
         }
     }
+
+    /**
+     * 根据城市编码下载地图
+     * @param citycode
+     */
     public void downloadOfflineMapByCode(String citycode){
         OfflineMapManager mapManager = new OfflineMapManager(getApplicationContext(),this);
         try {
@@ -188,6 +224,9 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         }
     }
 
+    /**
+     * 用户手机上传图片
+     */
     public void selectUserIconIntent(){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -206,6 +245,9 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
             try{
                 Bitmap bitmap = BitmapFactory.decodeStream(resolver.openInputStream(image));
                 image_user_detail.setImageBitmap(bitmap);
+                //上传到某个用户图像
+                this.userIconUpload(image,3);
+
             }catch (FileNotFoundException ex){
                 Log.i("File Not Found",ex.getMessage());
             }
@@ -214,13 +256,54 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     }
 
     //图片上传
-    public void userIconUpload(Uri uri){
+    public void userIconUpload(Uri uri,Integer id){
+        if(null == uri){
+            ToastUtils.showText(getApplicationContext(),"选择图片文件出错");
+        }
+        String[] projection = {MediaStore.Images.Media.DATA};
+        String picPath = null;
+        Cursor cursor = new CursorLoader(getApplicationContext(),uri,projection ,null,null,null).loadInBackground();
+        if(null != cursor){
+            int columnIndex = cursor.getColumnIndex(projection[0]);
+            cursor.moveToFirst();
+            picPath = cursor.getString(0);
+            cursor.close();
+        }
+        if(null != picPath && (picPath.endsWith(".png") || picPath.endsWith(".jpg"))){
+            final File picFile = new File(picPath);
+            if(null == picFile || !picFile.exists()){
+                ToastUtils.showText(getApplicationContext(),"文件不存在");
+            }
+            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            builder.addFormDataPart("img",picFile.getName(),RequestBody.create(MEDIA_TYPE_JPG,picFile));
+            MultipartBody body = builder.build();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(Config.HOST + Config.PORT + "/user/icon/" + id + "/upload.do")
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("上传失败",e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Log.i("上传成功",response.toString());
+                }
+            });
+        }
     }
 
     public boolean checkLogin(){
         SharedPreferences preferences = this.getSharedPreferences("config",MODE_PRIVATE);
         String username = preferences.getString("name",null);
         String password = preferences.getString("password",null);
-        return true;
+        Integer id = preferences.getInt("id",0);
+        if(id > 0){
+            return true;
+        }
+        return false;
     }
 }
