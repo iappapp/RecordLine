@@ -8,9 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.amap.util.Config;
+
 public class DbAdapter {
 
-    private final static String DATABASE_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/recordPath";
+    private final static String DATABASE_PATH = Config.DATA_PATH;
     static final String DATABASE_NAME = DATABASE_PATH + "/" + "record.db";
     private static final int DATABASE_VERSION = 3;
     private static final String RECORD_TABLE = "record";

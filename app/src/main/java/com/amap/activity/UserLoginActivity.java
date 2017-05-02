@@ -1,6 +1,7 @@
 package com.amap.activity;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,7 +44,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
 
     private Button user_login;
     private Button user_register;
-    private Handler handler;
+    private static Handler handler;
     private final static int SUCCEED = 1;
 
     @Override
@@ -78,9 +79,11 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                         String string = (String)msg.obj;
                         com.amap.modal.Message message = JSON.parseObject(string,com.amap.modal.Message.class);
                         if(message != null && message.getCode() == 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMessageg());
+                            ToastUtils.showText(getApplicationContext(),message.getMessage());
+                            saveLoginInfo();
+                            finish();
                         }else if(message != null && message.getCode() != 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMessageg());
+                            ToastUtils.showText(getApplicationContext(),message.getMessage());
                         }else{
                             ToastUtils.showText(getApplicationContext(),"请检查网络");
                         }
@@ -156,6 +159,16 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                 "/user/register.do?name=" + userName +
                 "&password=" + password;
         this.postUrl(url,null);
+    }
+
+    public void saveLoginInfo(){
+        String userName = login_username.getText().toString().trim();
+        String password = login_password.getText().toString().trim();
+        SharedPreferences preferences = this.getSharedPreferences("config",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("name",userName);
+        editor.putString("password",password);
+        editor.commit();
     }
 
 }

@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -55,11 +56,15 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
     private ToggleButton toggle_mapmode;
     private SharedPreferences preferences;
     private DbAdapter db;
-    private Handler handler;
+    private static Handler handler;
     private boolean isLogin = false;
     private final  static int USER_ICON = 1;
+    private final  static int USER_ICON_UPLOAD = 3;
     private final  static int LOGIN = 2;
     private static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
+    private String userName;
+    private String password;
+    private String iconName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +76,24 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         initEvent();
         initToggle();
         initRecord();
+        initHandler();
+        checkLogin();
         initUserIcon();
+
     }
 
+    public void initHandler(){
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case USER_ICON_UPLOAD:
+                        ToastUtils.showText(getApplicationContext(),"图片上传成功");
+                        break;
+                }
+            }
+        };
+    }
 
     public void initRecord(){
         db = new DbAdapter(getApplicationContext());
@@ -91,7 +111,8 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         isLogin = checkLogin();
         if(isLogin){
             //先检查服务端有无图像文件
-
+            text_login_name.setText(userName);
+            image_user_detail.setImageBitmap(BitmapFactory.decodeFile(Config.DATA_PATH + "/" + iconName));
         }else{
             image_user_detail.setImageResource(R.drawable.default_user);
         }
@@ -127,6 +148,8 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
 
     @Override
     public void onClick(View v) {
+        isLogin = checkLogin();
+        Intent userLogin = new Intent(getApplicationContext(),UserLoginActivity.class);
         switch (v.getId()){
             case R.id.layout_path:
                 Intent intentPath = new Intent(getApplicationContext(),RecordActivity.class);
@@ -140,17 +163,19 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
                 //
                 break;
             case R.id.user_detail:
-                Intent userLogin = new Intent(getApplicationContext(),UserLoginActivity.class);
                 if(isLogin){
 
                 }
                 else{
-                    startActivityForResult(userLogin, LOGIN);
+                    startActivity(userLogin);
                 }
                 break;
             case R.id.user_login :
-                Intent userLogin2 = new Intent(getApplicationContext(),UserLoginActivity.class);
-                startActivity(userLogin2);
+                startActivity(userLogin);
+                break;
+            case R.id.user_icon:
+                selectUserIconIntent();
+                break;
             default:
                 break;
         }
@@ -161,7 +186,6 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         if(on){
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("isNormalMap",true);
-
             editor.commit();
         }else{
             SharedPreferences.Editor editor = preferences.edit();
@@ -239,7 +263,7 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
         if(data == null){
             return;
         }
-        if(resultCode == USER_ICON){
+        if(requestCode == USER_ICON){
             Uri image = data.getData();
             ContentResolver resolver = this.getContentResolver();
             try{
@@ -247,7 +271,6 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
                 image_user_detail.setImageBitmap(bitmap);
                 //上传到某个用户图像
                 this.userIconUpload(image,3);
-
             }catch (FileNotFoundException ex){
                 Log.i("File Not Found",ex.getMessage());
             }
@@ -291,6 +314,10 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     Log.i("上传成功",response.toString());
+                    Message message = new Message();
+                    message.what = USER_ICON_UPLOAD;
+                    message.obj = response.toString();
+                    handler.sendMessage(message);
                 }
             });
         }
@@ -298,9 +325,10 @@ public class UserActivity extends Activity implements View.OnClickListener,Toggl
 
     public boolean checkLogin(){
         SharedPreferences preferences = this.getSharedPreferences("config",MODE_PRIVATE);
-        String username = preferences.getString("name",null);
-        String password = preferences.getString("password",null);
-        Integer id = preferences.getInt("id",0);
+        userName = preferences.getString("name",null);
+        password = preferences.getString("password",null);
+        iconName = preferences.getString("icon","3.jpg");
+        Integer id = preferences.getInt("id",3);
         if(id > 0){
             return true;
         }
