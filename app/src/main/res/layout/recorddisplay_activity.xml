@@ -42,8 +42,8 @@
                 android:id="@+id/title_center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="18dp"
+                android:text="轨迹记录详情"
+                android:textSize="25sp"
                 android:textStyle="bold" />
         </LinearLayout>
 

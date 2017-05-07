@@ -7,8 +7,16 @@ public class Message {
     private String message;
     private int code;
     private String error;
+    private Object object;
 
     public Message() {
+    }
+
+    public Message(String message, int code, String error, Object object) {
+        this.message = message;
+        this.code = code;
+        this.error = error;
+        this.object = object;
     }
 
     public Message(String message, int code, String error) {
@@ -41,12 +49,21 @@ public class Message {
         this.error = error;
     }
 
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
                 "message='" + message + '\'' +
                 ", code=" + code +
                 ", error='" + error + '\'' +
+                ", object=" + object +
                 '}';
     }
 }

@@ -22,7 +22,6 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.record.PathRecord;
-import com.example.recordpath3d.R;
 
 public class RecordShowActivity extends Activity implements OnMapLoadedListener {
 	private MapView mapView;

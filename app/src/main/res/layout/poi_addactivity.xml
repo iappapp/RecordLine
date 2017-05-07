@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="保存"
                 android:background="@drawable/button_main"
-                android:textSize="@dimen/poi_title"
+                android:textSize="25sp"
                 android:layout_weight="2"
                 android:layout_marginRight="5dp"
                 android:id="@+id/poi_add_save"
@@ -80,7 +80,9 @@
                 android:alpha="0.8"
                 android:background="@null"
                 android:gravity="center_vertical|left"
-                android:id="@+id/poi_add_name" />
+                android:id="@+id/poi_add_name"
+                android:maxLines="1"
+                android:maxLength="15" />
 
 
         </LinearLayout>
@@ -109,7 +111,10 @@
                 android:alpha="0.8"
                 android:background="@null"
                 android:gravity="center_vertical|left"
-                android:id="@+id/poi_add_description" />
+                android:id="@+id/poi_add_description"
+                android:minLines="1"
+                android:maxLines="1"
+                android:maxLength="15" />
         </LinearLayout>
 
 
@@ -167,7 +172,8 @@
                 android:layout_weight="2"
                 android:background="@null"
                 android:gravity="center_vertical|left"
-                android:id="@+id/poi_add_position" />
+                android:id="@+id/poi_add_position"
+                android:maxLines="1" />
         </LinearLayout>
 
 

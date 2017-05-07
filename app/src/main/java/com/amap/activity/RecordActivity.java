@@ -19,7 +19,8 @@ import com.amap.adapter.RecordAdapter;
 import com.amap.api.maps.model.LatLng;
 import com.amap.database.DbAdapter;
 import com.amap.record.PathRecord;
-import com.example.recordpath3d.R;
+import com.amap.util.Coordinate;
+import com.facebook.rebound.ui.Util;
 
 public class RecordActivity extends Activity {
 
@@ -78,36 +79,14 @@ public class RecordActivity extends Activity {
 			record.setDuration(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DURATION)));
 			record.setDate(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DATE)));
 			String lines = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_LINE));
-			record.setPathline(parseLocations(lines));
-			record.setStartpoint(parseLocation(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_STRAT))));
-			record.setEndpoint(parseLocation(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_END))));
+			record.setPathline(Coordinate.parseLocations(lines));
+			record.setStartpoint(Coordinate.parseLocation(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_STRAT))));
+			record.setEndpoint(Coordinate.parseLocation(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_END))));
 			listdata.add(record);
 		}
 		Collections.reverse(listdata);
 	}
-	private static ArrayList<LatLng> parseLocations(String latLonStr) {
-		ArrayList<LatLng> latLonPoints = new ArrayList<LatLng>();
-		String[] latLonStrs = latLonStr.split(";");
-		for (int i = 0; i < latLonStrs.length; i++) {
-			latLonPoints.add(parseLocation(latLonStrs[i]));
-		}
-		return latLonPoints;
-	}
-	
-	private static LatLng parseLocation(String latLonStr) {
-		if (latLonStr == null || latLonStr.equals("") || latLonStr.equals("[]")) {
-			return null;
-		}
-		double lat = 0.0;
-		double lon = 0.0;
-		String[] loc = latLonStr.split(",");
-		if (loc.length != 2) {
-			return null;
-		}
-		lat = Double.parseDouble(loc[0]);
-		lon = Double.parseDouble(loc[1]);
-		return new LatLng(lat, lon);
-	}
+
 	
 	public void onBackClick(View view) {
 		this.finish();

@@ -11,7 +11,6 @@ import com.amap.adapter.PoiAdapter;
 import com.amap.database.DbAdapter;
 import com.amap.record.PoiRecord;
 import com.amap.util.ToastUtils;
-import com.example.recordpath3d.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

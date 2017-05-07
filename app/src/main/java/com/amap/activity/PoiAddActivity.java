@@ -24,7 +24,6 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.database.DbAdapter;
 import com.amap.util.ToastUtils;
 import com.zcw.togglebutton.ToggleButton;
-import com.example.recordpath3d.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
