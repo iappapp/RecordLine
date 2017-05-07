@@ -122,7 +122,7 @@ public class DbAdapter {
     }
 
 
-    public static final String KEY__NAME = "name";
+    public static final String KEY_NAME = "name";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_POINT = "point";
     public static final String KEY_ADDRESS = "address";
@@ -130,7 +130,7 @@ public class DbAdapter {
 
     public boolean createRecord(String name,String description, String address, String point,String time) {
         ContentValues values = new ContentValues();
-        values.put(KEY__NAME,name);
+        values.put(KEY_NAME,name);
         values.put(KEY_DESCRIPTION, description);
         values.put(KEY_DATE, time);
         values.put(KEY_POINT, point);
@@ -139,7 +139,7 @@ public class DbAdapter {
     }
 
     public Cursor getAllPoiRecord() {
-        return db.query(POI_TABLE, new String[]{KEY_ROWID, KEY__NAME, KEY_DESCRIPTION, KEY_POINT, KEY_ADDRESS, KEY_DATE}, null, null, null, null, null);
+        return db.query(POI_TABLE, new String[]{KEY_ROWID, KEY_NAME, KEY_DESCRIPTION, KEY_POINT, KEY_ADDRESS, KEY_DATE}, null, null, null, null, null);
     }
 
     public int getAllPoiRecordsCount(){

@@ -24,6 +24,7 @@ import com.amap.api.maps.offlinemap.OfflineMapManager;
 import com.amap.database.DbAdapter;
 import com.amap.record.PathRecord;
 import com.amap.record.SPathRecord;
+import com.amap.record.SPoiRecord;
 import com.amap.util.Config;
 import com.amap.util.Coordinate;
 import com.amap.util.ToastUtils;
@@ -186,9 +187,9 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
                 break;*/
             case R.id.user_login:
                 if (checkLogin()) {
-                    testUpload();
+                    testUploadPoi();
                 } else {
-                    testUpload();
+                    testUploadPoi();
                     //startActivity(userLogin);
                 }
                 break;
@@ -414,6 +415,7 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
         mCursor.moveToFirst();
         while(mCursor.moveToNext()){
             SPathRecord record = new SPathRecord();
+            record.setId(mCursor.getInt(mCursor.getColumnIndex(DbAdapter.KEY_ROWID)));
             record.setDistance(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DISTANCE)));
             record.setDuration(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DURATION)));
             record.setDate(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DATE)));
@@ -427,4 +429,46 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
         db.close();
         uploadPathRecord(userId,pathRecordList);
     }
+
+    public void uploadPoiRecord(Integer id, final List<SPoiRecord> poiRecordList){
+        RequestBody requestBody = RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(poiRecordList));
+        Request request = new Request.Builder()
+                .url(Config.BASEURL + "/poi/" + id + "/insert/json.do")
+                .post(requestBody)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("error",e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
+    }
+
+    public void testUploadPoi(){
+        List<SPoiRecord> poiRecordList = new ArrayList<>();
+        db = new DbAdapter(getApplicationContext());
+        db.open();
+        Cursor mCursor = db.getAllPoi();
+        mCursor.moveToFirst();
+        while(mCursor.moveToNext()){
+            SPoiRecord record = new SPoiRecord();
+            record.setId(mCursor.getInt(mCursor.getColumnIndex(DbAdapter.KEY_ROWID)));
+            record.setName(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_NAME)));
+            record.setDescription(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DESCRIPTION)));
+            record.setPoint(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_POINT)));
+            record.setAddress(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_ADDRESS)));
+            record.setTime(mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DATE)));
+            poiRecordList.add(record);
+        }
+        db.close();
+        uploadPoiRecord(userId,poiRecordList);
+    }
+
+
 }

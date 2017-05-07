@@ -78,7 +78,7 @@ public class PoiListActivity extends Activity implements AdapterView.OnItemClick
             PoiRecord record = new PoiRecord();
             int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_ROWID)));
             record.setId(id);
-            record.setName(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY__NAME)));
+            record.setName(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)));
             record.setDescription(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DESCRIPTION)));
             record.setPoint(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_POINT)));
             String date = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DATE));
@@ -87,7 +87,7 @@ public class PoiListActivity extends Activity implements AdapterView.OnItemClick
             }catch (Exception ex){
                 ex.printStackTrace();
             }
-            record.setName(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY__NAME)));
+            record.setName(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)));
             poiRecords.add(record);
         }
         //db.close();
