@@ -45,7 +45,6 @@ import com.amap.database.DbAdapter;
 import com.amap.record.PathRecord;
 import com.amap.util.Coordinate;
 import com.amap.util.ToastUtils;
-import com.example.recordpath3d.R;
 
 /**
  * AMapV2地图中介绍如何显示一个基本地图

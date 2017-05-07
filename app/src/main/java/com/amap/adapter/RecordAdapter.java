@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.amap.activity.R;
 import com.amap.record.PathRecord;
-import com.example.recordpath3d.R;
 
 public class RecordAdapter extends BaseAdapter {
 

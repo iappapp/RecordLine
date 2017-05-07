@@ -7,8 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.activity.R;
 import com.amap.record.PoiRecord;
-import com.example.recordpath3d.R;
 
 import java.util.List;
 

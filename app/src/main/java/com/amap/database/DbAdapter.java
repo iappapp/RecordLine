@@ -8,9 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.amap.util.Config;
+
 public class DbAdapter {
 
-    private final static String DATABASE_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/recordPath";
+    private final static String DATABASE_PATH = Config.DATA_PATH;
     static final String DATABASE_NAME = DATABASE_PATH + "/" + "record.db";
     private static final int DATABASE_VERSION = 3;
     private static final String RECORD_TABLE = "record";
@@ -120,7 +122,7 @@ public class DbAdapter {
     }
 
 
-    public static final String KEY__NAME = "name";
+    public static final String KEY_NAME = "name";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_POINT = "point";
     public static final String KEY_ADDRESS = "address";
@@ -128,7 +130,7 @@ public class DbAdapter {
 
     public boolean createRecord(String name,String description, String address, String point,String time) {
         ContentValues values = new ContentValues();
-        values.put(KEY__NAME,name);
+        values.put(KEY_NAME,name);
         values.put(KEY_DESCRIPTION, description);
         values.put(KEY_DATE, time);
         values.put(KEY_POINT, point);
@@ -137,7 +139,7 @@ public class DbAdapter {
     }
 
     public Cursor getAllPoiRecord() {
-        return db.query(POI_TABLE, new String[]{KEY_ROWID, KEY__NAME, KEY_DESCRIPTION, KEY_POINT, KEY_ADDRESS, KEY_DATE}, null, null, null, null, null);
+        return db.query(POI_TABLE, new String[]{KEY_ROWID, KEY_NAME, KEY_DESCRIPTION, KEY_POINT, KEY_ADDRESS, KEY_DATE}, null, null, null, null, null);
     }
 
     public int getAllPoiRecordsCount(){

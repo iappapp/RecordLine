@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/poi_list_sing_content"
         android:layout_gravity="center_horizontal"
-        android:background="@android:color/darker_gray">
+        android:background="@color/poi_activity_title_bar">
 
         <ImageView
             android:layout_width="match_parent"

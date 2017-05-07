@@ -4,25 +4,33 @@ package com.amap.modal;
  * Created by tree on 17/2/18.
  */
 public class Message {
-    private String messageg;
+    private String message;
     private int code;
     private String error;
+    private Object object;
 
     public Message() {
     }
 
-    public Message(String messageg, int code, String error) {
-        this.messageg = messageg;
+    public Message(String message, int code, String error, Object object) {
+        this.message = message;
+        this.code = code;
+        this.error = error;
+        this.object = object;
+    }
+
+    public Message(String message, int code, String error) {
+        this.message = message;
         this.code = code;
         this.error = error;
     }
 
-    public String getMessageg() {
-        return messageg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMessageg(String messageg) {
-        this.messageg = messageg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getCode() {
@@ -41,12 +49,21 @@ public class Message {
         this.error = error;
     }
 
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
-                "messageg='" + messageg + '\'' +
+                "message='" + message + '\'' +
                 ", code=" + code +
                 ", error='" + error + '\'' +
+                ", object=" + object +
                 '}';
     }
 }

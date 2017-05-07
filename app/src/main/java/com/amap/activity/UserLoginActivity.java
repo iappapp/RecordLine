@@ -1,6 +1,7 @@
 package com.amap.activity;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,9 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.amap.modal.User;
 import com.amap.util.Config;
 import com.amap.util.ToastUtils;
-import com.example.recordpath3d.R;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.Map;
@@ -43,8 +45,9 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
 
     private Button user_login;
     private Button user_register;
-    private Handler handler;
+    private static Handler handler;
     private final static int SUCCEED = 1;
+    private Integer userId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,7 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
 
 
     }
-    //TODO同一消息格式
+
     /**
      * 处理线程运行返回的结果
      */
@@ -78,9 +81,18 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                         String string = (String)msg.obj;
                         com.amap.modal.Message message = JSON.parseObject(string,com.amap.modal.Message.class);
                         if(message != null && message.getCode() == 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMessageg());
+                            ToastUtils.showText(getApplicationContext(),message.getMessage());
+                            if(message.getMessage().contains("登陆成功")){
+                                try {
+                                    org.json.JSONObject jsonObject = new org.json.JSONObject(string);
+                                    User user = (User) jsonObject.get("object");
+                                    Log.i("user", user.toString());
+                                    saveLoginInfo(user);
+                                }catch (Exception ex){}
+                            }
+                            finish();
                         }else if(message != null && message.getCode() != 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMessageg());
+                            ToastUtils.showText(getApplicationContext(),message.getMessage());
                         }else{
                             ToastUtils.showText(getApplicationContext(),"请检查网络");
                         }
@@ -156,6 +168,18 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
                 "/user/register.do?name=" + userName +
                 "&password=" + password;
         this.postUrl(url,null);
+    }
+
+    public void saveLoginInfo(User user){
+        String userName = login_username.getText().toString().trim();
+        String password = login_password.getText().toString().trim();
+        Integer userId = user.getId();
+        SharedPreferences preferences = this.getSharedPreferences("config",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("name",userName);
+        editor.putString("password",password);
+        editor.putString("id",String.valueOf(userId));
+        editor.commit();
     }
 
 }
