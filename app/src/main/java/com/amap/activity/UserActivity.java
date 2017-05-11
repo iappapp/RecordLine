@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.LinearGradient;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +59,7 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
 
     private TextView text_login_name;
     private ImageView image_user_detail;
+    private ImageView user_detail;
     private TextView text_path_detail;
     private TextView text_point_detail;
     private TextView text_message_detail;
@@ -83,7 +86,7 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_me);
 
-        preferences = getSharedPreferences("config", MODE_PRIVATE);
+        preferences = getSharedPreferences("config", MODE_WORLD_READABLE);
         initView();
         initEvent();
         initToggle();
@@ -102,6 +105,10 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
                     case USER_ICON_UPLOAD:
                         ToastUtils.showText(getApplicationContext(), "图片上传成功");
                         break;
+                    case USER_ICON:
+                        initUserIcon();
+                        break;
+
                 }
             }
         };
@@ -139,6 +146,7 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
     public void initView() {
         text_login_name = (TextView) findViewById(R.id.user_login);
         image_user_detail = (ImageView) findViewById(R.id.user_icon);
+        user_detail = (ImageView) findViewById(R.id.user_detail);
         text_path_detail = (TextView) findViewById(R.id.user_path_detail);
         text_point_detail = (TextView) findViewById(R.id.user_poi_detail);
         text_message_detail = (TextView) findViewById(R.id.user_message_detail);
@@ -159,6 +167,7 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
         layout_message.setOnClickListener(this);
         image_user_detail.setOnClickListener(this);
         toggle_mapmode.setOnToggleChanged(this);
+        user_detail.setOnClickListener(this);
     }
 
     @Override
@@ -177,21 +186,15 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
             case R.id.layout_message:
                 //
                 break;
-            //取消该页面
-            /*case R.id.user_detail:
-                if (isLogin) {
 
-                } else {
-                    startActivity(userLogin);
+            case R.id.user_detail:
+                if (isLogin) {
+                    tryUploadPath();
+                    tryUploadPoi();
                 }
-                break;*/
+                break;
             case R.id.user_login:
-                if (checkLogin()) {
-                    testUploadPoi();
-                } else {
-                    testUploadPoi();
-                    //startActivity(userLogin);
-                }
+                startActivity(userLogin);
                 break;
             case R.id.user_icon:
                 selectUserIconIntent();
@@ -205,7 +208,6 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
     public void onToggle(boolean on) {
         SharedPreferences.Editor editor = preferences.edit();
         if (on) {
-
             editor.putBoolean("isNormalMap", true);
             editor.commit();
         } else {
@@ -302,8 +304,7 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    //图片上传
-    //TODO 图片上传文件后端接收后文件尺寸为0
+    //图片上传测试正常
     public void prepareIconUpload(Uri uri, Integer id) throws Exception{
         if (null == uri) {
             ToastUtils.showText(getApplicationContext(), "选择图片文件出错");
@@ -325,19 +326,22 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
                 ToastUtils.showText(getApplicationContext(), "文件不存在");
                 return;
             }
-            upload(picFile,id);
+            uploadImage(picFile,id);
         }
     }
 
-    public void upload(File file,Integer id){
+    public void uploadImage(File file,Integer id){
+        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder();
+        multipartBodyBuilder.setType(MultipartBody.FORM);
+        multipartBodyBuilder.addFormDataPart("image", file.getName(), RequestBody.create(MEDIA_TYPE_JPG, file));
 
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        builder.addPart(RequestBody.create(MEDIA_TYPE_JPG, file));
-        MultipartBody body = builder.build();
+        //构建请求体
+        RequestBody requestBody = multipartBodyBuilder.build();
+
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(Config.BASEURL + "/user/icon/" + id + "/upload.do")
-                .post(body)
+                .post(requestBody)
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -357,12 +361,11 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
     }
 
     public boolean checkLogin() {
-        SharedPreferences preferences = this.getSharedPreferences("config", MODE_PRIVATE);
         userName = preferences.getString("name", null);
         password = preferences.getString("password", null);
         userId = preferences.getInt("id", 0);
         iconName = preferences.getString("icon", userId + ".jpg");
-        if (userId > 0) {
+        if (userId >= 0) {
             text_login_name.setText(userName);
             return true;
         }
@@ -389,7 +392,7 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
 
     public void uploadPathRecord(Integer id, final List<SPathRecord> pathRecordList){
         RequestBody requestBody = RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(pathRecordList));
-        Request request = new Request.Builder()
+        final Request request = new Request.Builder()
                 .url(Config.BASEURL + "/record/" + id + "/insert/json.do")
                 .post(requestBody)
                 .build();
@@ -402,12 +405,12 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                ToastUtils.showText(getApplicationContext(),"上传成功");
+                Log.i("response path ",response.toString());
             }
         });
     }
 
-    public void testUpload(){
+    public void tryUploadPath(){
         List<SPathRecord> pathRecordList = new ArrayList<>();
         db = new DbAdapter(getApplicationContext());
         db.open();
@@ -445,12 +448,12 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-
+                Log.i("response poi ",response.toString());
             }
         });
     }
 
-    public void testUploadPoi(){
+    public void tryUploadPoi(){
         List<SPoiRecord> poiRecordList = new ArrayList<>();
         db = new DbAdapter(getApplicationContext());
         db.open();
@@ -470,5 +473,49 @@ public class UserActivity extends Activity implements View.OnClickListener, Togg
         uploadPoiRecord(userId,poiRecordList);
     }
 
+    public void tryDownloadUserIcon(Integer id){
+        Request request = new Request.Builder().get()
+                .url(Config.BASEURL + "/upload/" + id + ".jpg")
+                .build();
+        Log.i(null,request.url().url().getPath());
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("error",e.getMessage());
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.networkResponse().isSuccessful()){
+                    InputStream in = response.body().byteStream();
+                    Message message = new Message();
+                    message.what = USER_ICON;
+                    message.obj = in;
+                    File file = new File(Config.DATA_PATH,userId + ".jpg");
+                    if(file.exists()){
+                        file.delete();
+                        file.createNewFile();
+                    }else{
+                        file.createNewFile();
+                    }
+                    try {
+                        in.reset();
+                        FileOutputStream fileOutputStream = new FileOutputStream(file);
+                        byte[] bytes = new byte[1024];
+                        int length = 0;
+                        while ((length = in.read(bytes,0,1024)) != -1) {
+                            Log.i("start",length + "");
+                            fileOutputStream.write(bytes, 0, length);
+                            Log.i("byte size",bytes.toString());
+                        }
+                        fileOutputStream.close();
+                        in.close();
+                    }catch (Exception ex){}
+                    handler.sendMessage(message);
+
+                }
+            }
+        });
+    }
 }

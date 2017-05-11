@@ -46,8 +46,11 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
     private Button user_login;
     private Button user_register;
     private static Handler handler;
-    private final static int SUCCEED = 1;
+    private final static int SUCCEED_LOGIN = 1;
+    private final static int SUCCEED_REG = 2;
     private Integer userId = 0;
+    private String userName;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,25 +80,16 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what){
-                    case SUCCEED:
+                    case SUCCEED_LOGIN:
                         String string = (String)msg.obj;
-                        com.amap.modal.Message message = JSON.parseObject(string,com.amap.modal.Message.class);
-                        if(message != null && message.getCode() == 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMessage());
-                            if(message.getMessage().contains("登陆成功")){
-                                try {
-                                    org.json.JSONObject jsonObject = new org.json.JSONObject(string);
-                                    User user = (User) jsonObject.get("object");
-                                    Log.i("user", user.toString());
-                                    saveLoginInfo(user);
-                                }catch (Exception ex){}
-                            }
-                            finish();
-                        }else if(message != null && message.getCode() != 1){
-                            ToastUtils.showText(getApplicationContext(),message.getMessage());
-                        }else{
-                            ToastUtils.showText(getApplicationContext(),"请检查网络");
-                        }
+                        User user = JSON.parseObject(string,User.class);
+                        saveLoginInfo(user);
+                        finish();
+                        break;
+                    case SUCCEED_REG:
+                        String s = (String)msg.obj;
+                        ToastUtils.showText(getApplicationContext(),s);
+                        break;
                 }
             }
         };
@@ -108,8 +102,8 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        String userName = login_username.getText().toString().trim();
-        String password = login_password.getText().toString().trim();
+        userName = login_username.getText().toString().trim();
+        password = login_password.getText().toString().trim();
         if(StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)){
             ToastUtils.showText(getApplicationContext(),"请输入密码或用户名");
             return;
@@ -125,25 +119,15 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
         String url = Config.HOST + ":" + Config.PORT +
                 "/user/login.do?name=" + userName +
                 "&password=" + password;
-        postUrl(url,null);
+        postUrl(url,null,true);
     }
 
-    public void postUrl(String url,Map<String,String> header){
+    public void postUrl(String url, Map<String,String> header, final boolean isLogin){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
-                .post(new RequestBody() {
-                    @Override
-                    public MediaType contentType() {
-                        return MediaType.parse("json/application");
-                    }
-
-                    @Override
-                    public void writeTo(BufferedSink sink) throws IOException {
-
-                    }
-                })
                 .build();
+
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -152,12 +136,19 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String message = response.body().string();
-                Log.i("Message=",message);
-                Message message1 = new Message();
-                message1.what = SUCCEED;
-                message1.obj = message;
-                handler.sendMessage(message1);
+                String msg = response.body().string();
+                Log.i("Message=",msg);
+                if(isLogin){
+                    Message message = new Message();
+                    message.what = SUCCEED_LOGIN;
+                    message.obj = msg;
+                    handler.sendMessage(message);
+                }else{
+                    Message message = new Message();
+                    message.what = SUCCEED_REG;
+                    message.obj = msg;
+                    handler.sendMessage(message);
+                }
             }
         });
 
@@ -167,18 +158,18 @@ public class UserLoginActivity extends Activity implements View.OnClickListener{
         String url = Config.HOST + ":" + Config.PORT +
                 "/user/register.do?name=" + userName +
                 "&password=" + password;
-        this.postUrl(url,null);
+        this.postUrl(url,null,false);
     }
 
     public void saveLoginInfo(User user){
-        String userName = login_username.getText().toString().trim();
-        String password = login_password.getText().toString().trim();
+        String userName = user.getName();
+        String password = user.getPassword();
         Integer userId = user.getId();
-        SharedPreferences preferences = this.getSharedPreferences("config",MODE_PRIVATE);
+        SharedPreferences preferences = this.getSharedPreferences("config",MODE_WORLD_READABLE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("name",userName);
         editor.putString("password",password);
-        editor.putString("id",String.valueOf(userId));
+        editor.putInt("id",userId);
         editor.commit();
     }
 

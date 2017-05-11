@@ -1,6 +1,7 @@
 package com.amap.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -8,8 +9,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.amap.adapter.PoiAdapter;
+import com.amap.api.maps.model.LatLng;
 import com.amap.database.DbAdapter;
+import com.amap.record.PathRecord;
 import com.amap.record.PoiRecord;
+import com.amap.util.Coordinate;
 import com.amap.util.ToastUtils;
 
 import java.text.SimpleDateFormat;
@@ -20,7 +24,7 @@ import java.util.List;
 /**
  * Created by tree on 16/12/1.
  */
-public class PoiListActivity extends Activity implements AdapterView.OnItemClickListener{
+public class PoiListActivity extends Activity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener{
 
     private ListView poiList;
     private List<PoiRecord> poiRecords;
@@ -52,7 +56,7 @@ public class PoiListActivity extends Activity implements AdapterView.OnItemClick
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         PoiRecord record = poiRecords.get(position);
         int index = record.getId();
         if(db.deletePoiRecord(index)){
@@ -61,7 +65,23 @@ public class PoiListActivity extends Activity implements AdapterView.OnItemClick
         poiRecords.remove(position);
         poiAdapter.notifyDataSetChanged();
         poiList.invalidate();
+        return true;
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        PoiRecord record = poiRecords.get(position);
+        List<LatLng> latLngList = new ArrayList<>(10);
+        LatLng latLng = Coordinate.parseLocation(record.getPoint());
+        latLngList.add(latLng);
+        int index = record.getId();
+        Intent intent = new Intent(getApplicationContext(), RecordShowActivity.class);
+        PathRecord pathRecord = new PathRecord();
+        pathRecord.setAveragespeed("0");
+        pathRecord.setDate("");
+        pathRecord.setPathline(latLngList);
+        intent.putExtra("recorditem", pathRecord);
+        startActivity(intent);
     }
 
     public void initAdapter(){

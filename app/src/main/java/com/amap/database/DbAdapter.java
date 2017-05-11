@@ -96,7 +96,7 @@ public class DbAdapter {
     }
 
     public Cursor getallrecord() {
-        return db.query(RECORD_TABLE, new String[]{KEY_DISTANCE, KEY_DURATION, KEY_SPEED, KEY_LINE, KEY_STRAT, KEY_END, KEY_DATE}, null, null, null, null, null);
+        return db.query(RECORD_TABLE, new String[]{KEY_ROWID,KEY_DISTANCE, KEY_DURATION, KEY_SPEED, KEY_LINE, KEY_STRAT, KEY_END, KEY_DATE}, null, null, null, null, null);
     }
 
     public int getAllRecords(){

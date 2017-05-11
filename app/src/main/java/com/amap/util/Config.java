@@ -7,7 +7,7 @@ import android.os.Environment;
  */
 public class Config {
 
-    public static final String HOST = "http://192.168.3.21";
+    public static final String HOST = "http://192.168.3.24";
     public static final String PORT = "8080";
     public static final String BASEURL = HOST + ":" + PORT;
     public static final String CONTEXT = "";
